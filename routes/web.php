@@ -26,7 +26,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/outlet', [AdminController::class, 'Outlet'])->name('admin.outlet');
     Route::get('/admin/products', [ProductController::class, 'index'])->name('admin.products');
     Route::get('/admin/users', [AdminController::class, 'Users'])->name('admin.users');
+    // route for add new product
     Route::post('/admin/products', [ProductController::class, 'store'])->name('admin.products.store');
+    // route to fetch products
+    Route::post('/admin/products/getProducts', [ProductController::class, 'getProducts'])->name('admin.products.getProducts');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });

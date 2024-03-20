@@ -32,13 +32,13 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form class="needs-validation" novalidate>
+                        <form id="formProduct" class="needs-validation" novalidate>
                             @csrf
                             <div class="card-body">
                                 <input type="hidden" id="product_id" name="product_id">
                                 <div class="form-group">
                                     <label for="product_name">Product Name</label>
-                                    <input type="text" class="form-control" id="product_name" name="product_name" placeholder="Enter name of product" required>
+                                    <input type="text" class="form-control" id="product_name" name="product_name" placeholder="e.g. Vitron" required>
                                     <div class="valid-feedback">
                                         Looks good!
                                     </div>
@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="form-group mt-2">
                                     <label for="product_description">Product Description</label>
-                                    <input type="text" class="form-control" id="product_description" name="product_description" placeholder="Enter description of product" required>
+                                    <input type="text" class="form-control" id="product_description" name="product_description" placeholder="e.g. Vitron Syrup" required>
                                     <div class="valid-feedback">
                                         Looks good!
                                     </div>
@@ -58,7 +58,7 @@
                                 </div>
                                 <div class="form-group mt-2">
                                     <label for="product_unit_price">Unit Price</label>
-                                    <input type="number" class="form-control" id="product_unit_price" name="product_unit_price" placeholder="Enter unit price" required>
+                                    <input type="text" class="form-control" id="product_unit_price" name="product_unit_price" placeholder="e.g. 16.2" required>
                                     <div class="valid-feedback">
                                         Looks good!
                                     </div>
@@ -68,7 +68,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <input type="submit" class="btn btn-primary" value="Submit" id="btnSubmit">
                             </div>
                         </form>
                     </div>
@@ -82,7 +82,7 @@
                     <div class="card-body">
                         <h4 class="card-title mb-4">All products</h4>
                         <div class="table-responsive">
-                            <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
+                            <table id="dataTable" class="table table-centered mb-0 align-middle table-hover table-nowrap">
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
@@ -92,20 +92,6 @@
                                         <th>ACTION</th>
                                     </tr>
                                 </thead><!-- end thead -->
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td class="text-right py-0 align-middle">
-                                            <div class="btn-group btn-group-sm">
-                                                <a class="btn btn-info" id="btnEdit" title="Edit product"><i class="fas fa-edit" style="color: white;"></i></a>
-                                                <a class="btn btn-danger" id="btnDelete" title="Delete product"><i class="fas fa-trash" style="color: white;"></i></a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody><!-- end tbody -->
                             </table> <!-- end table -->
                         </div>
                     </div><!-- end card -->
@@ -115,89 +101,93 @@
     </div>
 </div>
 <script>
-    // add new user
+    // datatables
     $(function() {
-        $("form").submit(function(event) {
-            event.preventDefault();
-            let formData = $(this).serializeArray().reduce(function(obj, item) {
-                obj[item.name] = item.value;
-                return obj;
-            }, {});
-            let jsonData = JSON.stringify(formData);
-            if (this.checkValidity()) {
-                // new user
-                if (!formData.product_id) {
-                    $.ajax({
-                        url: "{{ route('admin.products.store') }}",
-                        type: "POST",
-                        data: {
-                            ...jsonData,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(data) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: 'Product successfully added.',
-                                showConfirmButton: false,
-                                timer: 1500
-                            }).then(() => {
-                                clearForm();
-                                $("#modalProduct").modal("hide");
-                                table.ajax.reload();
-                            });
-                        },
-                        error: function(result) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Product not updated.',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            console.log(jsonData);
-                        }
-                    });
-                } else {
-                    // update existing user
-                    $.ajax({
-                        url: "#" + formData.product_id,
-                        type: "PUT",
-                        data: jsonData,
-                        success: function(data) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: 'Record successfully updated.',
-                                showConfirmButton: false,
-                                timer: 1500
-                            }).then(() => {
-                                clearForm();
-                                table.ajax.reload();
-                                $("#modalProduct").modal("hide");
-                            });
-                        },
-                        error: function(result) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Record not updated.',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                        }
-                    });
+        let csrfToken = $('meta[name="csrf-token"]').attr('content');
+        let table = $("#dataTable").DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                type: "POST",
+                url: "{{ route('admin.products.getProducts') }}",
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
                 }
+            },
+            columns: [{
+                    data: 'product_id',
+                },
+                {
+                    data: 'product_name',
+                },
+                {
+                    data: 'product_description',
+                },
+                {
+                    data: 'product_unit_price',
+                },
+                {
+                    data: '',
+                    defaultContent: `<td class="text-right py-0 align-middle">
+                <div class="btn-group btn-group-sm">
+                <a class="btn btn-info" id="btnEdit" title="Edit product"><i class="fas fa-edit" style="color: white;"></i></a>
+                <a class="btn btn-danger" id="btnDelete" title="Delete product"><i class="fas fa-trash" style="color: white;"></i></a>
+                </div>
+                </td>`
+                }
+            ],
+            paging: true,
+            lengthChange: true,
+            searching: true,
+            ordering: true,
+            order: [
+                [0, 'desc']
+            ],
+            info: true,
+            autoWidth: true,
+            lengthMenu: [10, 20, 30, 40, 50],
+            scrollX: true
+        }); // end of table
+        // function if modal hide
+        $("#modalProduct").on('hidden.bs.modal', function(e) {
+            clearForm();
+        }); //end function
+        // add new product
+        $("#formProduct").submit(function(event) {
+            event.preventDefault();
+            let form = $("#formProduct")[0];
+            let data = new FormData(form);
+            if (this.checkValidity()) {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('admin.products.store') }}",
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Product successfully added.',
+                            timer: 1500
+                        }).then(() => {
+                            table.ajax.reload(); //reload datatable
+                            $("#modalProduct").modal('hide'); //hide modal
+                        });
+                    },
+                    error: function(e) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Product not added.',
+                            timer: 1500
+                        });
+                    }
+                });
             }
-        });
+        }); //end of adding product
     });
-    // clear form after event
-    function clearForm() {
-        $("#product_id").val("");
-        $("#product_name").val("");
-        $("#product_description").val("");
-        $("#product_unit_price").val("");
-    }
+
     // check validation
     $(document).ready(function() {
         'use strict';
@@ -212,5 +202,12 @@
             });
         });
     });
+    // clear form after event
+    function clearForm() {
+        $("#product_id").val("");
+        $("#product_name").val("");
+        $("#product_description").val("");
+        $("#product_unit_price").val("");
+    }
 </script>
 @endsection
