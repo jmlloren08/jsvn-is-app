@@ -1,0 +1,1 @@
+<img src="{{ asset('logo/jsvnlogo.png') }}" width="100px">
