@@ -35,7 +35,7 @@
                         <form id="formProduct" class="needs-validation" novalidate>
                             @csrf
                             <div class="card-body">
-                                <input type="hidden" id="product_id" name="product_id">
+                                <input type="number" id="product_id" name="product_id">
                                 <div class="form-group">
                                     <label for="product_name">Product Name</label>
                                     <input type="text" class="form-control" id="product_name" name="product_name" placeholder="e.g. Vitron" required>
@@ -157,35 +157,63 @@
             event.preventDefault();
             let form = $("#formProduct")[0];
             let data = new FormData(form);
+            let id = data.get('product_id');
             if (this.checkValidity()) {
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('admin.products.store') }}",
-                    data: data,
-                    processData: false,
-                    contentType: false,
-                    success: function(data) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Product successfully added.',
-                            timer: 1500
-                        }).then(() => {
-                            table.ajax.reload(); //reload datatable
-                            $("#modalProduct").modal('hide'); //hide modal
-                        });
-                    },
-                    error: function(e) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Product not added.',
-                            timer: 1500
-                        });
-                    }
-                });
+                if (!id) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('admin.products.store') }}",
+                        data: data,
+                        processData: false,
+                        contentType: false,
+                        success: function(data) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Product successfully added.',
+                                timer: 1500
+                            }).then(() => {
+                                table.ajax.reload(); //reload datatable
+                                $("#modalProduct").modal('hide'); //hide modal
+                            });
+                        },
+                        error: function(e) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Product not added.',
+                                timer: 1500
+                            });
+                        }
+                    });
+                } else {}
             }
         }); //end of adding product
+        // get product for updating
+        $(document).on("click", "#btnEdit", function(e) {
+            let row = $(this).closest("tr");
+            let data = table.row(row).data();
+            let id = data.product_id;
+            $.ajax({
+                type: "GET",
+                url: "/admin/products/" + id,
+                success: function(response) {
+                    $("#modalProduct").modal("show");
+                    $("#product_id").val(response.product_id);
+                    $("#product_name").val(response.product_name);
+                    $("#product_description").val(response.product_description);
+                    $("#product_unit_price").val(response.product_unit_price);
+                },
+                error: function(result) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong',
+                        timer: 1500
+                    });
+                }
+            });
+        });
     });
 
     // check validation

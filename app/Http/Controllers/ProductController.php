@@ -33,7 +33,7 @@ class ProductController extends Controller
         $products = $query->skip($start)
             ->take($length)
             ->get(['*']);
-        
+
         $response = [
             'draw'              => intval($draw),
             'recordsTotal'      => $totalRecords,
@@ -58,5 +58,10 @@ class ProductController extends Controller
         $product->save();
 
         return response()->json(['res' => 'Product created successfully.']);
+    }
+    public function edit($id = null)
+    {
+        $data = Product::where('product_id', $id)->first();
+        return response()->json($data);
     }
 }
