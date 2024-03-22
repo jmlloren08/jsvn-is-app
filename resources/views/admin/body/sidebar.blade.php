@@ -19,6 +19,12 @@
                         <span>Transaction</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('admin.warehouse') }}" class=" waves-effect">
+                        <i class="ri-home-gear-line"></i>
+                        <span>Warehouse</span>
+                    </a>
+                </li>
             </ul>
             <!-- End of navigation -->
             <!-- Management -->

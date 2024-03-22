@@ -27,17 +27,18 @@ class AdminController extends Controller
     {
         return view('admin.transaction');
     }
-
+    public function Warehouse()
+    {
+        return view('admin.warehouse');
+    }
     public function Company()
     {
         return view('admin.company');
     }
-
     public function Outlet()
     {
         return view('admin.outlet');
     }
-
     public function Users()
     {
         return view('admin.users');

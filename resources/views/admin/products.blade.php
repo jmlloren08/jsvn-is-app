@@ -35,7 +35,7 @@
                         <form id="formProduct" class="needs-validation" novalidate>
                             @csrf
                             <div class="card-body">
-                                <input type="number" id="product_id" name="product_id">
+                                <input type="hidden" id="id" name="id">
                                 <div class="form-group">
                                     <label for="product_name">Product Name</label>
                                     <input type="text" class="form-control" id="product_name" name="product_name" placeholder="e.g. Vitron" required>
@@ -68,7 +68,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <input type="submit" class="btn btn-primary" value="Submit" id="btnSubmit">
+                                <input type="submit" class="btn btn-primary" value="Submit">
                             </div>
                         </form>
                     </div>
@@ -103,19 +103,18 @@
 <script>
     // datatables
     $(function() {
-        let csrfToken = $('meta[name="csrf-token"]').attr('content');
         let table = $("#dataTable").DataTable({
             processing: true,
             serverSide: true,
             ajax: {
-                type: "POST",
                 url: "{{ route('admin.products.getProducts') }}",
+                type: "POST",
                 headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                }
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
             },
             columns: [{
-                    data: 'product_id',
+                    data: 'id',
                 },
                 {
                     data: 'product_name',
@@ -148,30 +147,28 @@
             lengthMenu: [10, 20, 30, 40, 50],
             scrollX: true
         }); // end of table
-        // function if modal hide
-        $("#modalProduct").on('hidden.bs.modal', function(e) {
-            clearForm();
-        }); //end function
         // add new product
         $("#formProduct").submit(function(event) {
             event.preventDefault();
             let form = $("#formProduct")[0];
-            let data = new FormData(form);
-            let id = data.get('product_id');
+            let formData = new FormData(form);
+            let id = formData.get('id');
             if (this.checkValidity()) {
                 if (!id) {
                     $.ajax({
-                        type: "POST",
                         url: "{{ route('admin.products.store') }}",
-                        data: data,
+                        type: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: formData,
                         processData: false,
                         contentType: false,
                         success: function(data) {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success',
-                                text: 'Product successfully added.',
-                                timer: 1500
+                                text: 'Product successfully added.'
                             }).then(() => {
                                 table.ajax.reload(); //reload datatable
                                 $("#modalProduct").modal('hide'); //hide modal
@@ -181,25 +178,65 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
-                                text: 'Product not added.',
-                                timer: 1500
+                                text: 'Product not added.'
                             });
                         }
                     });
-                } else {}
+                } else {
+                    let productData = {
+                        product_name: formData.get('product_name'),
+                        product_description: formData.get('product_description'),
+                        product_unit_price: formData.get('product_unit_price')
+                    };
+                    $.ajax({
+                        url: `/admin/products/${id}`,
+                        type: "PUT",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: productData,
+                        dataType: 'JSON',
+                        success: function(data) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Product successfully updated.'
+                            }).then(() => {
+                                table.ajax.reload(); //reload datatable
+                                $("#modalProduct").modal('hide'); //hide modal
+                            });
+                        },
+                        error: function(e) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: e.responseJSON.message
+                            });
+                        }
+                    });
+                }
             }
         }); //end of adding product
+
+        // function if modal hide
+        $("#modalProduct").on('hidden.bs.modal', function(e) {
+            clearForm();
+        }); //end function
+
         // get product for updating
         $(document).on("click", "#btnEdit", function(e) {
             let row = $(this).closest("tr");
             let data = table.row(row).data();
-            let id = data.product_id;
+            let id = data.id;
             $.ajax({
+                url: `/admin/products/${id}`,
                 type: "GET",
-                url: "/admin/products/" + id,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 success: function(response) {
                     $("#modalProduct").modal("show");
-                    $("#product_id").val(response.product_id);
+                    $("#id").val(response.id);
                     $("#product_name").val(response.product_name);
                     $("#product_description").val(response.product_description);
                     $("#product_unit_price").val(response.product_unit_price);
@@ -208,8 +245,48 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Something went wrong',
-                        timer: 1500
+                        text: result.response
+                    });
+                }
+            });
+        });
+        // delete product
+        $(document).on("click", "#btnDelete", function(e) {
+            let row = $(this).closest("tr");
+            let data = table.row(row).data();
+            let id = data.id;
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You will not be able to revert this.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/admin/products/${id}`,
+                        type: "DELETE",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(data) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Product has been deleted.'
+                            }).then(() => {
+                                table.ajax.reload();
+                            });
+                        },
+                        error: function(result) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Something went wrong.'
+                            });
+                        }
                     });
                 }
             });
@@ -232,7 +309,7 @@
     });
     // clear form after event
     function clearForm() {
-        $("#product_id").val("");
+        $("#id").val("");
         $("#product_name").val("");
         $("#product_description").val("");
         $("#product_unit_price").val("");

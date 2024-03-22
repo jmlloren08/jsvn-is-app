@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -41,27 +42,68 @@ class ProductController extends Controller
             'data'              => $products
         ];
 
-        return response()->json($response);
+        return response()->json($response, 200);
     }
     public function store(Request $request)
     {
-        $request->validate([
-            'product_name'          => 'required',
-            'product_description'   => 'nullable|string',
-            'product_unit_price'    => 'required|numeric'
-        ]);
+        try {
+            $request->validate([
+                'product_name'          => 'required|string',
+                'product_description'   => 'nullable|string',
+                'product_unit_price'    => 'required|numeric'
+            ]);
 
-        $product = new Product;
-        $product->product_name = $request->product_name;
-        $product->product_description = $request->product_description;
-        $product->product_unit_price = $request->product_unit_price;
-        $product->save();
+            $product = new Product;
+            $product->product_name          = $request->product_name;
+            $product->product_description   = $request->product_description;
+            $product->product_unit_price    = $request->product_unit_price;
+            $product->save();
 
-        return response()->json(['res' => 'Product created successfully.']);
+            return response()->json(['message' => 'Data added successfully.'], 200);
+        } catch (\Exception $e) {
+
+            Log::error("Error updating product: " . $e->getMessage());
+            return response()->json(['message' => 'Internal server error'], 500);
+        }
     }
-    public function edit($id = null)
+    public function edit($id)
     {
-        $data = Product::where('product_id', $id)->first();
+        $data = Product::where('id', $id)->first();
+
+        if (!$data) {
+            return response()->json(['message' => 'Data not found.'], 404);
+        }
+
         return response()->json($data);
+    }
+    public function update(Request $request, $id)
+    {
+        try {
+
+            $request->validate([
+                'product_name'          => 'required|string',
+                'product_description'   => 'nullable|string',
+                'product_unit_price'    => 'required|numeric'
+            ]);
+
+            $product = Product::findOrFail($id);
+
+            $product->product_name          = $request->product_name;
+            $product->product_description   = $request->product_description;
+            $product->product_unit_price    = $request->product_unit_price;
+            $product->save();
+
+            return response()->json(['message' =>  'Data updated successfully.']);
+        } catch (\Exception $e) {
+
+            Log::error("Error updating product: " . $e->getMessage());
+            return response()->json(['message' => 'Internal server error'], 500);
+        }
+    }
+    public function delete($id)
+    {
+        Product::where('id', $id)->delete();
+
+        return response()->json(['message' => 'Product deleted successfully.'], 200);
     }
 }
