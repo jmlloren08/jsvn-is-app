@@ -108,15 +108,17 @@ class ProductController extends Controller
 
         return response()->json(['message' => 'Product deleted successfully.'], 200);
     }
-    public function getUnitPrice($id)
+    public function getUnitPriceAndDescription($id)
     {
         try {
-
             $products = Product::findOrFail($id);
-            return response()->json(['product_unit_price' => $products->product_unit_price]);
+            return response()->json([
+                'product_description'   => $products->product_description,
+                'product_unit_price'    => $products->product_unit_price
+            ]);
         } catch (\Exception $e) {
 
-            Log::error("Error getting product_unit_price: " . $e->getMessage());
+            Log::error("Error getting unit price and  description: " . $e->getMessage());
             return response()->json(['message' => 'Internal server error'], 500);
         }
     }

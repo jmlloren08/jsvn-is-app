@@ -36,16 +36,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/outlets/{id}', [OutletController::class, 'edit']);
     Route::get('/admin/warehouse/{id}', [WarehouseController::class, 'edit']);
     Route::get('/get-outlet-address/{id}', [OutletController::class, 'getOutletAddress']);
-    Route::get('/get-unit-price/{id}', [ProductController::class, 'getUnitPrice']);
+    Route::get('/get-outlet-name/{id}', [OutletController::class, 'getOutletName']);
+    Route::get('/get-unit-price-and-description/{id}', [ProductController::class, 'getUnitPriceAndDescription']);
     // route for add new product/outlets/stocks/transactions
     Route::post('/admin/products', [ProductController::class, 'store'])->name('admin.products.store');
     Route::post('/admin/outlets', [OutletController::class, 'store'])->name('admin.outlets.store');
     Route::post('/admin/warehouse', [WarehouseController::class, 'store'])->name('admin.warehouse.store');
     Route::post('/admin/transactions', [TransactionController::class, 'store'])->name('admin.transactions.store');
-    // update existing products/outlets/stocks
+    // update existing products/outlets/stocks/onhand
     Route::put('/admin/products/{id}', [ProductController::class, 'update']);
     Route::put('/admin/outlets/{id}', [OutletController::class, 'update']);
     Route::put('/admin/warehouse/{id}', [WarehouseController::class, 'update']);
+    Route::put('/admin/transactions/{id}', [TransactionController::class, 'update']);
     // route to fetch products/outlets/stocks/transactions
     Route::post('/admin/products/getProducts', [ProductController::class, 'getProducts'])->name('admin.products.getProducts');
     Route::post('/admin/outlets/getOutlets', [OutletController::class, 'getOutlets'])->name('admin.outlets.getOutlets');

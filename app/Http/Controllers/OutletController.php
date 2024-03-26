@@ -113,4 +113,9 @@ class OutletController extends Controller
         $full_address = $outlets->outlet_cities_municipalities . ', ' . $outlets->outlet_provinces;
         return response()->json(['full_address' => $full_address]);
     }
+    public function getOutletName($id)
+    {
+        $outlets = Outlet::findOrFail($id);
+        return response()->json(['outlet_name' => $outlets->outlet_name]);
+    }
 }

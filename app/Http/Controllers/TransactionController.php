@@ -15,9 +15,11 @@ class TransactionController extends Controller
     {
         $outlets = Outlet::all();
         $products = Product::all();
+        $transactions = Transaction::distinct()->pluck('transaction_no');
         return view('admin.transactions', [
-            'outlets'   => $outlets,
-            'products'  => $products
+            'outlets'       => $outlets,
+            'products'      => $products,
+            'transactions'  => $transactions
         ]);
     }
     public function store(Request $request)
@@ -27,6 +29,7 @@ class TransactionController extends Controller
                 'transaction_no'                    => 'required|numeric',
                 'transaction_date'                  => 'required|date',
                 'transactions'                      => 'required|array',
+                'transactions.*.outlet_id'          => 'required|numeric',
                 'transactions.*.product_id'         => 'required|numeric',
                 'transactions.*.unit_price'         => 'required|numeric',
                 'transactions.*.quantity'           => 'required|numeric',
@@ -45,6 +48,7 @@ class TransactionController extends Controller
                 $transaction = new Transaction;
                 $transaction->transaction_no    =   $transaction_no;
                 $transaction->transaction_date  =   $transaction_date;
+                $transaction->outlet_id         =   $transactionData['outlet_id'];
                 $transaction->product_id        =   $transactionData['product_id'];
                 $transaction->unit_price        =   $transactionData['unit_price'];
                 $transaction->quantity          =   $transactionData['quantity'];
@@ -55,6 +59,29 @@ class TransactionController extends Controller
         } catch (\Exception $e) {
 
             Log::error("Error adding transaction: " . $e->getMessage());
+            return response()->json(['message' => 'Internal server error'], 500);
+        }
+    }
+    public function update(Request $request, $id)
+    {
+        try {
+
+            $request->validate([
+                'on_hand'   => 'required|numeric',
+                'sold'      => 'required|numeric',
+                'total'     => 'required|numeric'
+            ]);
+
+            $transaction = Transaction::findOrFail($id);
+
+            $transaction->on_hand   = $request->on_hand;
+            $transaction->sold      = $request->sold;
+            $transaction->total     = $request->total;
+            $transaction->save();
+
+            return response()->json(['message' => 'Date updated successfully.']);
+        } catch (\Exception $e) {
+            Log::error("Error updating onhand: " . $e->getMessage());
             return response()->json(['message' => 'Internal server error'], 500);
         }
     }

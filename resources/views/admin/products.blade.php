@@ -59,7 +59,7 @@
                                 </div>
                                 <div class="form-group mt-2">
                                     <label for="product_unit_price">Unit Price</label>
-                                    <input type="text" class="form-control" id="product_unit_price" name="product_unit_price" placeholder="e.g. 16.2" required>
+                                    <input type="number" class="form-control" id="product_unit_price" name="product_unit_price" step="0.01" min="0" placeholder="e.g. 16.2" required>
                                     <div class="valid-feedback">
                                         Looks good!
                                     </div>
