@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->bigIncrements('transaction_id');
-            $table->string('transaction_no');
+            $table->unsignedBigInteger('transaction_no');
             $table->date('transaction_date');
             $table->unsignedBigInteger('outlet_id');
             $table->foreign('outlet_id')
-                ->references('outlet_id')->on('outlets')
+                ->references('id')->on('outlets')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->string('term')->nullable();
@@ -25,12 +25,12 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')
-                ->references('company_id')->on('companies')
+                ->references('id')->on('companies')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')
-                ->references('product_id')->on('products')
+                ->references('id')->on('products')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->integer('quantity');

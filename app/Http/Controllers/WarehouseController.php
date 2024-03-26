@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class ProductController extends Controller
+class WarehouseController extends Controller
 {
     public function index()
     {
-        return view('admin.products');
+        $products = Product::all();
+        return view('admin.warehouse', ['products' => $products]);
     }
-    public function getProducts(Request $request)
+    public function getStocks(Request $request)
     {
         $draw           = $request->input('draw');
         $start          = $request->input('start');
@@ -20,28 +22,35 @@ class ProductController extends Controller
         $searchValue    = $request->input('search.value');
         $orderColumn    = $request->input("columns.{$request->input('order.0.column')}.data");
         $orderDirection = $request->input('order.0.dir');
-        $query          = Product::query();
+        $query          = Warehouse::query();
+
+        $query->join('products', 'warehouses.product_id', '=', 'products.id');
 
         if (!empty($searchValue)) {
-            $query->whereAny([
-                'product_name',
-                'product_description',
-                'product_unit_price'
-            ], 'like', "%$searchValue%")->get();
+            $query->where(function ($q) use ($searchValue) {
+                $q->whereAny([
+                    'products.product_description',
+                    'warehouses.stocks',
+                    'warehouses.sold'
+                ], 'like', "%$searchValue%");
+            });
         }
 
         $totalRecords = $query->count();
+
+        $query->select('warehouses.*', 'products.product_description');
+
         $query->orderBy($orderColumn, $orderDirection);
         $filteredRecords = $query->count();
-        $products = $query->skip($start)
+        $stocks = $query->skip($start)
             ->take($length)
-            ->get(['*']);
+            ->get();
 
         $response = [
             'draw'              => intval($draw),
             'recordsTotal'      => $totalRecords,
             'recordsFiltered'   => $filteredRecords,
-            'data'              => $products
+            'data'              => $stocks
         ];
 
         return response()->json($response, 200);
@@ -49,17 +58,16 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
+
             $request->validate([
-                'product_name'          => 'required|string',
-                'product_description'   => 'nullable|string',
-                'product_unit_price'    => 'required|numeric'
+                'product_id'    => 'required|numeric',
+                'stocks'        => 'required|numeric'
             ]);
 
-            $product = new Product;
-            $product->product_name          = $request->product_name;
-            $product->product_description   = $request->product_description;
-            $product->product_unit_price    = $request->product_unit_price;
-            $product->save();
+            $warehouse = new Warehouse;
+            $warehouse->product_id  = $request->product_id;
+            $warehouse->stocks      = $request->stocks;
+            $warehouse->save();
 
             return response()->json(['message' => 'Data added successfully.'], 200);
         } catch (\Exception $e) {
@@ -70,7 +78,7 @@ class ProductController extends Controller
     }
     public function edit($id)
     {
-        $data = Product::where('id', $id)->first();
+        $data = Warehouse::where('id', $id)->first();
 
         if (!$data) {
             return response()->json(['message' => 'Data not found.'], 404);
@@ -83,17 +91,15 @@ class ProductController extends Controller
         try {
 
             $request->validate([
-                'product_name'          => 'required|string',
-                'product_description'   => 'nullable|string',
-                'product_unit_price'    => 'required|numeric'
+                'product_id'    => 'required|numeric',
+                'stocks'        => 'required|numeric'
             ]);
 
-            $product = Product::findOrFail($id);
+            $warehouse = Warehouse::findOrFail($id);
 
-            $product->product_name          = $request->product_name;
-            $product->product_description   = $request->product_description;
-            $product->product_unit_price    = $request->product_unit_price;
-            $product->save();
+            $warehouse->product_id  = $request->product_id;
+            $warehouse->stocks      = $request->stocks;
+            $warehouse->save();
 
             return response()->json(['message' =>  'Data updated successfully.']);
         } catch (\Exception $e) {
@@ -104,20 +110,8 @@ class ProductController extends Controller
     }
     public function delete($id)
     {
-        Product::where('id', $id)->delete();
+        Warehouse::where('id', $id)->delete();
 
         return response()->json(['message' => 'Product deleted successfully.'], 200);
-    }
-    public function getUnitPrice($id)
-    {
-        try {
-
-            $products = Product::findOrFail($id);
-            return response()->json(['product_unit_price' => $products->product_unit_price]);
-        } catch (\Exception $e) {
-
-            Log::error("Error getting product_unit_price: " . $e->getMessage());
-            return response()->json(['message' => 'Internal server error'], 500);
-        }
     }
 }

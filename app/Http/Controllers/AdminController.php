@@ -15,29 +15,11 @@ class AdminController extends Controller
         $request->session()->regenerateToken();
         return redirect('/login');
     }
-
     public function Profile()
     {
         // $id = Auth::user()->id;
         // $adminData = User::find($id);
         return view('admin.admin_profile_view');
-    }
-
-    public function Transaction()
-    {
-        return view('admin.transaction');
-    }
-    public function Warehouse()
-    {
-        return view('admin.warehouse');
-    }
-    public function Company()
-    {
-        return view('admin.company');
-    }
-    public function Outlet()
-    {
-        return view('admin.outlet');
     }
     public function Users()
     {

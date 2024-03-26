@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('warehouse_withdrawals', function (Blueprint $table) {
-            $table->bigIncrements('withdrawal_id');
+        Schema::create('warehouses', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->date('withdrawal_date');
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')
-                ->references('product_id')->on('products')
+                ->references('id')->on('products')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->integer('quantity_out');
+            $table->integer('quantity_out')->nullable();
             $table->integer('quantity_return')->nullable();
+            $table->integer('sold')->nullable();
+            $table->integer('stock');
             $table->timestamps();
         });
     }

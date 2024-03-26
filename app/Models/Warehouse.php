@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Product extends Model
+class Warehouse extends Model
 {
     use HasFactory, Notifiable;
 
@@ -16,8 +16,16 @@ class Product extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'product_name',
-        'product_description',
-        'product_unit_price'
+        'withdrawal_date',
+        'product_id',
+        'quantity_out',
+        'quantity_return',
+        'sold',
+        'stocks'
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

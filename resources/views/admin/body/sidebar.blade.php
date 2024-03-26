@@ -14,7 +14,7 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title">NAVIGATION</li>
                 <li>
-                    <a href="{{ route('admin.transaction') }}" class=" waves-effect">
+                    <a href="{{ route('admin.transactions') }}" class=" waves-effect">
                         <i class="ri-money-dollar-box-line"></i>
                         <span>Transaction</span>
                     </a>
@@ -31,13 +31,13 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title">MANAGEMENT</li>
                 <li>
-                    <a href="{{ route('admin.company') }}" class=" waves-effect">
+                    <a href="{{ route('admin.companies') }}" class=" waves-effect">
                         <i class="ri-building-2-line"></i>
                         <span>Company</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.outlet') }}" class=" waves-effect">
+                    <a href="{{ route('admin.outlets') }}" class=" waves-effect">
                         <i class="ri-community-line"></i>
                         <span>Outlet</span>
                     </a>

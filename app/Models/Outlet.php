@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Product extends Model
+class Outlet extends Model
 {
     use HasFactory, Notifiable;
 
@@ -16,8 +16,8 @@ class Product extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'product_name',
-        'product_description',
-        'product_unit_price'
+        'outlet_name',
+        'outlet_cities_municipalities',
+        'outlet_provinces'
     ];
 }

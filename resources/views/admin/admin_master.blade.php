@@ -12,6 +12,7 @@
     <link rel="shortcut icon" href="{{ url('backend/assets/images/favicon.ico') }}">
     <!-- jquery.vectormap css -->
     <link href="{{ url('backend/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css') }}" rel="stylesheet" type="text/css" />
+    <!-- jquery -->
     <script src="{{ url('backend/assets/libs/jquery/jquery.min.js') }}"></script>
     <!-- DataTables -->
     <link href="{{ url('backend/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
