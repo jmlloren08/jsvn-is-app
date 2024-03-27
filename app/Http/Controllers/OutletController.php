@@ -107,11 +107,14 @@ class OutletController extends Controller
 
         return response()->json(['message' => 'Outlet deleted successfully.', 200]);
     }
-    public function getOutletAddress($id)
+    public function getOutletNameAddress($id)
     {
         $outlets = Outlet::findOrFail($id);
         $full_address = $outlets->outlet_cities_municipalities . ', ' . $outlets->outlet_provinces;
-        return response()->json(['full_address' => $full_address]);
+        return response()->json([
+            'outlet_name'   => $outlets->outlet_name,
+            'full_address'  => $full_address
+        ]);
     }
     public function getOutletName($id)
     {

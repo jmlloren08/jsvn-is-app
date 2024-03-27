@@ -25,7 +25,7 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="flex-grow-1">
-                                <p class="text-truncate font-size-14 mb-2">Total Sales</p>
+                                <p class="text-truncate font-size-14 mb-2">Daily Sales</p>
                                 <h4 class="mb-2">1452</h4>
                             </div>
                             <div class="avatar-sm">

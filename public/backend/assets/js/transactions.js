@@ -53,18 +53,57 @@ $(function () {
         info: true,
         autoWidth: true,
         lengthMenu: [10, 20, 30, 40, 50],
-        scrollX: true
+        scrollX: true,
+        // calculate and display total_price
+        drawCallback: function () {
+            let api = this.api();
+            let total = api.column(7, {
+                page: 'current'
+            }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+            $('#total_price').html(`<code>Total: ₱${total.toFixed(2)}</code>`);
+        }
     }); // end of table
+    // load datatables by outlet and date
+    $('#filter_outlet_id, #filter_date').on('change', function () {
+        let outletId = $('#filter_outlet_id').val();
+        let date = $('#filter_date').val();
+        table.ajax.url(`${getTransactionURL}/?outlet_id=${outletId}&date=${date}`).load();
+    });
+    // get transaction number by outlet and date
+    $('#filter_outlet_id, #filter_date').on('change', function () {
+        let outletId = $('#filter_outlet_id').val();
+        let date = $('#filter_date').val();
+        $.ajax({
+            url: getTransactionNoURL,
+            type: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                outlet_id: outletId,
+                transaction_date: date
+            },
+            success: function (response) {
+                $('#trans_no').val(response.transaction_no);
+            },
+            error: function (error) {
+                console.log('Error fetching transaction number: ', error);
+            }
+        });
+    });
     // get address from outlet select
     $('#filter_outlet_id').on('change', function () {
         let id = $(this).val();
         $.ajax({
-            url: `${getOutletAddressURL}/${id}`,
+            url: `${getOutletNameAddressURL}/${id}`,
             type: 'GET',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function (response) {
+                $('#outlet_name_for_print').val(response.outlet_name);
                 $('#outlet_address').val(response.full_address);
             },
             error: function (error) {
@@ -300,5 +339,5 @@ $(document).ready(function () {
     $("#modalTransact").on('hidden.bs.modal', function (e) {
         clearFormAndTable();
     }); //end function
-   
+
 });

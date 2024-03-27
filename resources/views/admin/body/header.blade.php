@@ -49,13 +49,13 @@
             </div>
             <div class="dropdown d-inline-block user-dropdown">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="{{ url('backend/assets/images/users/avatar-1.jpg') }}" alt="Header Avatar">
+                    <img class="rounded-circle header-profile-user" src="{{ url('backend/assets/images/users/user.png') }}" alt="Header Avatar">
                     <span class="d-none d-xl-inline-block ms-1">{{Auth::user()->username}}</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="ri-user-line align-middle me-1"></i> Profile</a>
+                    <a class="dropdown-item" href="javascript:void(0);"><i class="ri-user-line align-middle me-1"></i> Profile</a>
                     <a class="dropdown-item d-block" href="javascript:void(0);"><span class="badge bg-success float-end mt-1">11</span><i class="ri-settings-2-line align-middle me-1"></i> Settings</a>
                     <a class="dropdown-item" href="javascript:void(0);"><i class="ri-lock-unlock-line align-middle me-1"></i> Lock screen</a>
                     <div class="dropdown-divider"></div>

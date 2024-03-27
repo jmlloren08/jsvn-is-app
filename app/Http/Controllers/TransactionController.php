@@ -6,6 +6,7 @@ use App\Models\Outlet;
 use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,11 +16,10 @@ class TransactionController extends Controller
     {
         $outlets = Outlet::all();
         $products = Product::all();
-        $transactions = Transaction::distinct()->pluck('transaction_no');
+
         return view('admin.transactions', [
             'outlets'       => $outlets,
-            'products'      => $products,
-            'transactions'  => $transactions
+            'products'      => $products
         ]);
     }
     public function store(Request $request)
@@ -87,15 +87,27 @@ class TransactionController extends Controller
     }
     public function getTransactions(Request $request)
     {
+        $outletId       = $request->input('outlet_id');
+        $date           = $request->input('date');
+
         $draw           = $request->input('draw');
         $start          = $request->input('start');
         $length         = $request->input('length');
         $searchValue    = $request->input('search.value');
         $orderColumn    = $request->input("columns.{$request->input('order.0.column')}.data");
         $orderDirection = $request->input('order.0.dir');
+
         $query          = Transaction::query();
 
         $query->join('products', 'transactions.product_id', '=', 'products.id');
+
+        if (!empty($outletId)) {
+            $query->where('transactions.outlet_id', $outletId);
+        }
+
+        if (!empty($date)) {
+            $query->where('transactions.transaction_date', $date);
+        }
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
@@ -130,5 +142,17 @@ class TransactionController extends Controller
         ];
 
         return response()->json($response, 200);
+    }
+    public function getTransactionNumber(Request $request)
+    {
+        $outletId   = $request->input('outlet_id');
+        $date       = $request->input('transaction_date');
+
+        $transaction_no = Transaction::where('outlet_id', $outletId)
+            ->whereDate('transaction_date', $date)
+            ->distinct()
+            ->pluck('transaction_no');
+
+        return response()->json(['transaction_no' => $transaction_no]);
     }
 }

@@ -198,27 +198,18 @@
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mt-2 d-flex align-items-center">
-                            <div class="col-2 d-flex">
+                        <div class="row mt-2">
+                            <div class="col-md-4">
                                 <label for="company_name">COMPANY NAME:</label>
-                            </div>
-                            <div class="col-3 d-flex justify-content-start">
-                                <select class="form-control custom-select" name="company_name" id="company_name">
-                                    <option value="" selected disabled>Choose</option>
-                                </select>
-                                <div class="valid-feedback">
-                                    Looks good!
-                                </div>
-                                <div class="invalid-feedback">
-                                    Please choose company.
-                                </div>
-                            </div>
-                            <div class="col-3 d-flex justify-content-end">
-                                <label for="date">DATE:</label>
-                            </div>
-                            <div class="col-4">
                                 <div class="form-group">
-                                    <input type="date" class="form-control" id="date" name="date" value="{{ date('Y-m-d') }}">
+                                    <input type="text" class="form-control" id="company_name" name="company_name" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4 mt-2">
+                                <label for="filter_date">DATE:</label>
+                                <div class="form-group">
+                                    <input type="date" class="form-control" id="filter_date" name="filter_date" value="{{ date('Y-m-d') }}">
                                     <div class="valid-feedback">
                                         Looks good!
                                     </div>
@@ -228,11 +219,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row d-flex align-items-center mt-2">
-                            <div class="col-2 justify-content-end">
+                        <div class="row mt-2">
+                            <div class="col-md-4">
                                 <label for="filter_outlet_id">OUTLET NAME:</label>
-                            </div>
-                            <div class="col-3 justify-content-start">
                                 <select class="form-control custom-select" name="filter_outlet_id" id="filter_outlet_id" required>
                                     <option value="" selected disabled>Choose</option>
                                     @foreach ($outlets as $outlet)
@@ -246,27 +235,11 @@
                                     Please choose outlet.
                                 </div>
                             </div>
-                            <div class="col-3 d-flex justify-content-end">
-                                <label for="term">TERM:</label>
-                            </div>
-                            <div class="col-4">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" id="term" name="term">
-                                    <div class="valid-feedback">
-                                        Looks good!
-                                    </div>
-                                    <div class="invalid-feedback">
-                                        Please select date.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-2 d-flex align-items-center mt-2">
-                            <div class="col-2 justify-content-end">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4 mt-2">
                                 <label for="outlet_address">ADDRESS:</label>
-                            </div>
-                            <div class="col-3 justify-content-start">
                                 <div class="form-group">
+                                    <input type="hidden" id="outlet_name_for_print" name="outlet_name_for_print">
                                     <input type="text" class="form-control" id="outlet_address" name="outlet_address" readonly>
                                     <div class="valid-feedback">
                                         Looks good!
@@ -276,21 +249,31 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3 d-flex justify-content-end">
-                                <label for="filter_trans_no">TRANS NO:</label>
-                            </div>
-                            <div class="col-3 justify-content-start">
-                                <select class="form-control custom-select" name="filter_trans_no" id="filter_trans_no" required>
-                                    <option value="" selected disabled>Choose</option>
-                                    @foreach ($transactions as $trans_no)
-                                    <option value="{{ $trans_no }}">{{ $trans_no }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="valid-feedback">
-                                    Looks good!
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-4">
+                                <label for="term">TERM:</label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="term" name="term" readonly>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please select date.
+                                    </div>
                                 </div>
-                                <div class="invalid-feedback">
-                                    Please choose outlet.
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4 mt-2">
+                                <label for="trans_no">TRANS NO:</label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="trans_no" name="trans_no" readonly>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please enter transaction number.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -330,6 +313,13 @@
                                 </thead><!-- end thead -->
                             </table> <!-- end table -->
                         </div>
+                        <div class="row card-footer mt-3 d-flex">
+                            <div class="col-8 d-flex justify-content-end">
+                                <h3 id="total_price"></h3>
+                            </div>
+                            <div class="col-4">
+                            </div>
+                        </div>
                     </div><!-- end card -->
                 </div><!-- end card -->
             </div><!-- end col -->
@@ -339,12 +329,14 @@
 <script>
     let storeTransactionURL = "{{ route('admin.transactions.store') }}";
     let getTransactionURL = "{{ route('admin.transactions.getTransactions') }}";
-    let getOutletAddressURL = "/get-outlet-address";
+    let getOutletNameAddressURL = "/get-outlet-name-address";
     let getOutletNameURL = "/get-outlet-name";
     let updateOnhandURL = "/admin/transactions";
     let getUnitPriceAndDescriptionURL = "/get-unit-price-and-description";
+    let getTransactionNoURL = "/get-transaction-number";
 </script>
 <script src="{{ url('backend/assets/js/transactions.js') }}"></script>
+<script src="{{ url('backend/assets/js/print-transaction.js') }}"></script>
 <script>
     $(document).ready(function() {
         $('#on_hand').on('input', function() {

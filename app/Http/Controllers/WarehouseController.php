@@ -72,7 +72,7 @@ class WarehouseController extends Controller
             return response()->json(['message' => 'Data added successfully.'], 200);
         } catch (\Exception $e) {
 
-            Log::error("Error updating product: " . $e->getMessage());
+            Log::error("Error adding stocks into warehouse: " . $e->getMessage());
             return response()->json(['message' => 'Internal server error'], 500);
         }
     }

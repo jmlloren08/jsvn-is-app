@@ -35,9 +35,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/products/{id}', [ProductController::class, 'edit']);
     Route::get('/admin/outlets/{id}', [OutletController::class, 'edit']);
     Route::get('/admin/warehouse/{id}', [WarehouseController::class, 'edit']);
-    Route::get('/get-outlet-address/{id}', [OutletController::class, 'getOutletAddress']);
+    Route::get('/get-outlet-name-address/{id}', [OutletController::class, 'getOutletNameAddress']);
     Route::get('/get-outlet-name/{id}', [OutletController::class, 'getOutletName']);
     Route::get('/get-unit-price-and-description/{id}', [ProductController::class, 'getUnitPriceAndDescription']);
+    Route::get('/get-transaction-number', [TransactionController::class, 'getTransactionNumber']);
     // route for add new product/outlets/stocks/transactions
     Route::post('/admin/products', [ProductController::class, 'store'])->name('admin.products.store');
     Route::post('/admin/outlets', [OutletController::class, 'store'])->name('admin.outlets.store');
