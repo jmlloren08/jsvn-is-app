@@ -19,9 +19,6 @@ $(function () {
             data: 'stocks',
         },
         {
-            data: 'sold',
-        },
-        {
             data: '',
             defaultContent: `<td class="text-right py-0 align-middle">
             <div class="btn-group btn-group-sm">

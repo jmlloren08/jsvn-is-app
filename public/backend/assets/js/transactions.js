@@ -8,6 +8,10 @@ $(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
+            data: function (d) {
+                d.outlet_id = $('#filter_outlet_id').val();
+                d.date = $('#filter_date').val();
+            }
         },
         columns: [{
             data: 'id',
@@ -29,9 +33,11 @@ $(function () {
         },
         {
             data: 'unit_price',
+            render: $.fn.DataTable.render.number(',', '.', 2, '₱')
         },
         {
             data: 'total',
+            render: $.fn.DataTable.render.number(',', '.', 2, '₱')
         },
         {
             data: '',
@@ -62,14 +68,15 @@ $(function () {
             }).data().reduce(function (a, b) {
                 return a + parseFloat(b);
             }, 0);
-            $('#total_price').html(`<code>Total: ₱${total.toFixed(2)}</code>`);
+            $('#table_sub_total_price').text(total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            $('#hidden_sub_total').val(total.toFixed(2));
         }
     }); // end of table
-    // load datatables by outlet and date
+    // // // load datatables by outlet and date
     $('#filter_outlet_id, #filter_date').on('change', function () {
         let outletId = $('#filter_outlet_id').val();
         let date = $('#filter_date').val();
-        table.ajax.url(`${getTransactionURL}/?outlet_id=${outletId}&date=${date}`).load();
+        table.ajax.reload();
     });
     // get transaction number by outlet and date
     $('#filter_outlet_id, #filter_date').on('change', function () {
@@ -266,7 +273,7 @@ $(function () {
         event.preventDefault();
         let form = $("#formEdit")[0];
         let formData = new FormData(form);
-        let total = $('#sub_total').text();
+        let total = $('#modal_sub_total').text();
         let id = formData.get('idForUpdating');
         if (this.checkValidity()) {
             let updateData = {

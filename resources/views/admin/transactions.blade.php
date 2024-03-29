@@ -36,59 +36,79 @@
                         <form id="formTransaction" class="needs-validation" novalidate>
                             @csrf
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label for="transaction_no">TRANSACTION NUMBER: </label>
-                                    <input type="text" class="form-control" id="transaction_no" name="transaction_no" required readonly>
-                                </div>
-                                <div class="form-group mt-2">
-                                    <label for="transaction_date">Transaction Date</label>
-                                    <input type="date" class="form-control" id="transaction_date" name="transaction_date" value="{{ date('Y-m-d') }}" required>
-                                    <div class="valid-feedback">
-                                        Looks good!
-                                    </div>
-                                    <div class="invalid-feedback">
-                                        Please enter date.
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="transaction_no">TRANSACTION NUMBER: </label>
+                                            <input type="text" class="form-control" id="transaction_no" name="transaction_no" required readonly>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group mt-2">
-                                    <label for="outlet_id">Outlet</label>
-                                    <select class="form-control custom-select" name="outlet_id" id="outlet_id" required>
-                                        <option value="" selected disabled>Choose</option>
-                                        @foreach ($outlets as $outlet) : ?>
-                                        <option value="{{ $outlet->id }}">{{ $outlet->outlet_name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <div class="valid-feedback">
-                                        Looks good!
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="transaction_date">Transaction Date</label>
+                                            <input type="date" class="form-control" id="transaction_date" name="transaction_date" value="{{ date('Y-m-d') }}" required>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Please enter date.
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="invalid-feedback">
-                                        Please choose outlet.
-                                    </div>
-                                    <input type="hidden" id="outlet_name" name="outlet_name">
                                 </div>
-                                <div class="form-group mt-2">
-                                    <label for="product_id">Product</label>
-                                    <select class="form-control custom-select" name="product_id" id="product_id" required>
-                                        <option value="" selected disabled>Choose</option>
-                                        @foreach ($products as $product)
-                                        <option value="{{ $product->id }}">{{ $product->product_description }}</option>
-                                        @endforeach
-                                    </select>
-                                    <div class="valid-feedback">
-                                        Looks good!
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="outlet_id">Outlet</label>
+                                            <select class="form-control custom-select" name="outlet_id" id="outlet_id" required>
+                                                <option value="" selected disabled>Choose</option>
+                                                @foreach ($outlets as $outlet) : ?>
+                                                <option value="{{ $outlet->id }}">{{ $outlet->outlet_name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Please choose outlet.
+                                            </div>
+                                            <input type="hidden" id="outlet_name" name="outlet_name">
+                                        </div>
                                     </div>
-                                    <div class="invalid-feedback">
-                                        Please choose product.
-                                    </div>
-                                    <input type="hidden" id="product_description" name="product_description">
                                 </div>
-                                <div class="form-group mt-2">
-                                    <div class="row">
-                                        <div class="col-6">
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="product_id">Product</label>
+                                            <select class="form-control custom-select" name="product_id" id="product_id" required>
+                                                <option value="" selected disabled>Choose</option>
+                                                @foreach ($products as $product)
+                                                <option value="{{ $product->id }}">{{ $product->product_description }}</option>
+                                                @endforeach
+                                            </select>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Please choose product.
+                                            </div>
+                                            <input type="hidden" id="product_description" name="product_description">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
                                             <label for="unit_price">Unit Price</label>
                                             <input type="text" class="form-control" id="unit_price" name="unit_price" required readonly>
                                         </div>
-                                        <div class="col-6">
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
                                             <label for="quantity">Quantity</label>
                                             <input type="number" class="form-control" id="quantity" name="quantity" required>
                                             <div class="valid-feedback">
@@ -98,6 +118,11 @@
                                                 Please quantity.
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <input type="button" class="btn btn-success" id="btnAdd" value="Add item">
                                     </div>
                                 </div>
                                 <div class="mt-3"></div>
@@ -120,7 +145,6 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <input type="button" class="btn btn-success" id="btnAdd" value="Add item">
                                 <input type="submit" class="btn btn-primary" id="btnSubmit" value="Submit">
                             </div>
                         </form>
@@ -143,13 +167,15 @@
                             <div class="card-body">
                                 <input type="hidden" id="idForUpdating" name="idForUpdating">
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="prod_desc">Product Description: </label>
                                             <input type="text" class="form-control" id="prod_desc" name="prod_desc" required readonly>
                                         </div>
                                     </div>
-                                    <div class="col-6">
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="u_price">Unit Price: </label>
                                             <input type="number" class="form-control" id="u_price" name="u_price" step="0.01" min="0" required readonly>
@@ -157,19 +183,23 @@
                                     </div>
                                 </div>
                                 <div class="row mt-2">
-                                    <div class="col-4">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="qtty">Quantity: </label>
                                             <input type="number" class="form-control" id="qtty" name="qtty" required readonly>
                                         </div>
                                     </div>
-                                    <div class="col-4">
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="on_hand">On hand: </label>
                                             <input type="number" class="form-control" id="on_hand" name="on_hand" required>
                                         </div>
                                     </div>
-                                    <div class="col-4">
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="sold">Sold: </label>
                                             <input type="number" class="form-control" id="sold" name="sold" required readonly>
@@ -180,7 +210,7 @@
                             <div class="modal-footer">
                                 <div class="row d-flex align-items-center">
                                     <div class="col-6 d-flex justify-content-start">
-                                        <label for="sold" style="color: red;">Sub total: <span id="sub_total" name="sub_total" style="color: red;"></span></label>
+                                        <label for="sold" style="color: red;">Sub total: <span id="modal_sub_total" name="modal_sub_total" style="color: red;"></span></label>
                                     </div>
                                     <div class="col-6 d-flex justify-content-end">
                                         <input type="submit" class="btn btn-success" value="Save">
@@ -200,7 +230,7 @@
                     <div class="card-body">
                         <div class="row mt-2">
                             <div class="col-md-4">
-                                <label for="company_name">COMPANY NAME:</label>
+                                <label for="company_name">TRA:</label>
                                 <div class="form-group">
                                     <input type="text" class="form-control" id="company_name" name="company_name" readonly>
                                 </div>
@@ -313,27 +343,50 @@
                                 </thead><!-- end thead -->
                             </table> <!-- end table -->
                         </div>
-                        <div class="row card-footer mt-3 d-flex">
-                            <div class="col-8 d-flex justify-content-end">
-                                <h3 id="total_price"></h3>
-                            </div>
-                            <div class="col-4">
-                            </div>
-                        </div>
                     </div><!-- end card -->
                 </div><!-- end card -->
             </div><!-- end col -->
         </div><!-- end row -->
+        <div class="mt-2"></div>
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="mb-0"> Subtotal:</p>
+                                <p class="mb-0" id="table_sub_total_price" style="color: red;"></p>
+                                <input type="hidden" class="form-control" id="hidden_sub_total" name="hidden_sub_total">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="number" class="form-control" id="discount" name="discount" placeholder="Discount">
+                                <input type="hidden" class="form-control" id="discount_amount" name="discount_amount">
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4"></div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <p class="mb-0">Total: </p>
+                                <p id="total_price"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script>
     let storeTransactionURL = "{{ route('admin.transactions.store') }}";
     let getTransactionURL = "{{ route('admin.transactions.getTransactions') }}";
+    let getTransactionNoURL = "/get-transaction-number";
     let getOutletNameAddressURL = "/get-outlet-name-address";
     let getOutletNameURL = "/get-outlet-name";
     let updateOnhandURL = "/admin/transactions";
     let getUnitPriceAndDescriptionURL = "/get-unit-price-and-description";
-    let getTransactionNoURL = "/get-transaction-number";
 </script>
 <script src="{{ url('backend/assets/js/transactions.js') }}"></script>
 <script src="{{ url('backend/assets/js/print-transaction.js') }}"></script>
@@ -346,7 +399,15 @@
             let sold = quantity - on_hand;
             $('#sold').val(sold);
             let sub_total = u_price * sold;
-            $('#sub_total').text(sub_total);
+            $('#modal_sub_total').text(sub_total);
+        });
+        $('#discount').on('input', function() {
+            let tableSubTotalPrice = parseFloat($('#hidden_sub_total').val()) || 0;
+            let discountPercentage = parseInt($(this).val()) || 0;
+            let discountAmount = (tableSubTotalPrice * discountPercentage) / 100;
+            let total = tableSubTotalPrice - discountAmount;
+            $('#total_price').html(`<strong>${total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strong>`);
+            $('#discount_amount').val(discountAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
         });
     });
 </script>

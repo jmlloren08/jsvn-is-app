@@ -5,6 +5,10 @@ function printReport() {
     let term = $('#term').val();
     let outletAddress = $('#outlet_address').val();
     let transNo = $('#trans_no').val();
+    
+    let tableSubTotalPrice = $('#table_sub_total_price').text();
+    let discountPercentage = $('#discount').val();
+    let discountAmount = $('#discount_amount').val();
     let total_price = $('#total_price').text();
 
     // Open new window for printing
@@ -24,7 +28,7 @@ function printReport() {
     printWindow.document.write(`<p><strong>Date:</strong> ${filterDate} </p>`);
     printWindow.document.write(`<p><strong>Outlet Name:</strong> ${outletName} </p>`);
     printWindow.document.write(`<p><strong>Outlet Address:</strong> ${outletAddress} </p>`);
-    printWindow.document.write(`<p><strong>Company Name:</strong> ${companyName} </p>`);
+    printWindow.document.write(`<p><strong>TRA:</strong> ${companyName} </p>`);
     printWindow.document.write(`<p><strong>Term:</strong> ${term} </p>`);
     printWindow.document.write(`<p><strong>Transaction No:</strong> ${transNo} </p>`);
 
@@ -36,7 +40,7 @@ function printReport() {
     printWindow.document.write('<th>ON_HAND</th>');
     printWindow.document.write('<th>SOLD</th>');
     printWindow.document.write('<th>UNIT_PRICE</th>');
-    printWindow.document.write('<th>SUB_TOTAL</th>');
+    printWindow.document.write('<th>AMOUNT</th>');
     printWindow.document.write('</tr></thead><tbody>');
 
     $('#dataTableSubmitted tbody tr').each(function () {
@@ -58,10 +62,25 @@ function printReport() {
         printWindow.document.write(`<td>${subTotal}</td>`);
         printWindow.document.write('</tr>');
     });
-
     printWindow.document.write('</tbody></table>');
 
-    printWindow.document.write(`<h3> ${total_price} </h3>`);
+    printWindow.document.write('<table>');
+    printWindow.document.write('<thead><tr>');
+    printWindow.document.write(`<th><p>Subtotal: ${tableSubTotalPrice}</p></th>`);
+    printWindow.document.write('</tr></thead><tbody>');
+    printWindow.document.write('</tbody></table>');
+
+    printWindow.document.write('<table>');
+    printWindow.document.write('<thead><tr>');
+    printWindow.document.write(`<th>Discount (${discountPercentage}%): -${discountAmount}</th>`);
+    printWindow.document.write('</tr></thead><tbody>');
+    printWindow.document.write('</tbody></table>');
+
+    printWindow.document.write('<table>');
+    printWindow.document.write('<thead><tr>');
+    printWindow.document.write(`<th>Total: ${total_price}</th>`);
+    printWindow.document.write('</tr></thead><tbody>');
+    printWindow.document.write('</tbody></table>');
 
     printWindow.document.write('</body></html>');
 

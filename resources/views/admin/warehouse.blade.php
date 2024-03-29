@@ -39,35 +39,29 @@
                             @csrf
                             <div class="card-body">
                                 <input type="hidden" id="id" name="id">
-                                <div class="form-group">
-                                    <label for="product_id">Product</label>
-                                    <select class="form-control custom-select" name="product_id" id="product_id" required>
-                                        <option value="" selected disabled>Choose</option>
-                                        <?php foreach ($products as $product) : ?>
-                                            <option value="<?= $product['id']; ?>"><?= $product['product_description']; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <div class="valid-feedback">
-                                        Looks good!
-                                    </div>
-                                    <div class="invalid-feedback">
-                                        Please choose product.
-                                    </div>
-                                </div>
-                                <div class="form-group mt-2">
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <label for="stocks">Numbers of stock</label>
-                                            <input type="number" class="form-control" id="stocks" name="stocks" placeholder="e.g. 2" required readonly>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="product_id">Product</label>
+                                            <select class="form-control custom-select" name="product_id" id="product_id" required>
+                                                <option value="" selected disabled>Choose</option>
+                                                <?php foreach ($products as $product) : ?>
+                                                    <option value="<?= $product['id']; ?>"><?= $product['product_description']; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
                                             <div class="valid-feedback">
                                                 Looks good!
                                             </div>
                                             <div class="invalid-feedback">
-                                                Please enter valid number.
+                                                Please choose product.
                                             </div>
                                         </div>
-                                        <div class="col-4">
-                                            <label for="bxs">Boxes/Bottles</label>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="bxs">Boxes/Cases</label>
                                             <input type="number" class="form-control" id="bxs" name="bxs" placeholder="e.g. 225" required>
                                             <div class="valid-feedback">
                                                 Looks good!
@@ -76,9 +70,35 @@
                                                 Please enter valid number.
                                             </div>
                                         </div>
-                                        <div class="col-4">
-                                            <label for="pcs">Pcs per box/bottle</label>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="pcs">Pcs/box or Bottle/cases</label>
                                             <input type="number" class="form-control" id="pcs" name="pcs" placeholder="e.g. 30" required>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Please enter valid number.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="remainder">Remainder (optional)</label>
+                                            <input type="number" class="form-control" id="remainder" name="remainder" placeholder="optional">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="stocks">Numbers of stock</label>
+                                            <input type="number" class="form-control" id="stocks" name="stocks" placeholder="e.g. 2" required readonly>
                                             <div class="valid-feedback">
                                                 Looks good!
                                             </div>
@@ -110,8 +130,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>PRODUCT</th>
-                                        <th>REMAINING STOCKS</th>
-                                        <th>SOLD</th>
+                                        <th>REMAINING_STOCKS</th>
                                         <th>ACTION</th>
                                     </tr>
                                 </thead><!-- end thead -->
@@ -133,10 +152,11 @@
 <script src="{{ url('backend/assets/js/crud-warehouse.js') }}"></script>
 <script>
     $(document).ready(function() {
-        $('#bxs, #pcs').on('input', function() {
+        $('#bxs, #pcs, #remainder').on('input', function() {
             let bxs = parseInt($('#bxs').val()) || 0;
             let pcsPerBox = parseInt($('#pcs').val()) || 0;
-            let stocks = bxs * pcsPerBox;
+            let remainder = parseInt($('#remainder').val()) || 0;
+            let stocks = (bxs * pcsPerBox) + remainder;
             $('#stocks').val(stocks);
         });
     });

@@ -4,7 +4,8 @@
             <div class="col-sm-6">
                 <script>
                     document.write(new Date().getFullYear())
-                </script> © JSVN
+                </script> © JSVN v1.2.1
+                <!-- Semantic Versioning: (1) Major, incompatible/breaking changes; (2) Minor, add new functionality/features; and (3) Patch, fix bugs/errors. -->
             </div>
             <div class="col-sm-6">
                 <div class="text-sm-end d-none d-sm-block">
