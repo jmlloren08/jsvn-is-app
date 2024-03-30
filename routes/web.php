@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\WithdrawalController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/profile', [ProfileController::class, 'index'])->name('admin.profile');
     Route::get('/admin/transactions', [TransactionController::class, 'index'])->name('admin.transactions');
     Route::get('/admin/warehouse', [WarehouseController::class, 'index'])->name('admin.warehouse');
+    Route::get('/admin/withdrawal', [WithdrawalController::class, 'index'])->name('admin.withdrawal');
     Route::get('/admin/companies', [CompanyController::class, 'index'])->name('admin.companies');
     Route::get('/admin/outlets', [OutletController::class, 'index'])->name('admin.outlets');
     Route::get('/admin/products', [ProductController::class, 'index'])->name('admin.products');

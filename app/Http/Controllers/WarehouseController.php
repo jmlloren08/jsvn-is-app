@@ -92,13 +92,17 @@ class WarehouseController extends Controller
 
             $request->validate([
                 'product_id'    => 'required|numeric',
-                'stocks'        => 'required|numeric'
+                'stocks'        => 'required|numeric',
+                'quantity_out'  => 'required|numeric'
             ]);
 
             $warehouse = Warehouse::findOrFail($id);
 
-            $warehouse->product_id  = $request->product_id;
-            $warehouse->stocks      = $request->stocks;
+            $warehouse->product_id      = $request->product_id;
+            $warehouse->stocks          = $request->stocks;
+            $warehouse->quantity_out    = $request->quantity_out;
+            $warehouse->quantity_return = $request->quantity_return;
+            $warehouse->sold            = $request->sold;
             $warehouse->save();
 
             return response()->json(['message' =>  'Data updated successfully.']);

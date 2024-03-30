@@ -19,6 +19,15 @@ $(function () {
             data: 'stocks',
         },
         {
+            data: 'quantity_out',
+        },
+        {
+            data: 'quantity_return',
+        },
+        {
+            data: 'sold',
+        },
+        {
             data: '',
             defaultContent: `<td class="text-right py-0 align-middle">
             <div class="btn-group btn-group-sm">
@@ -40,6 +49,7 @@ $(function () {
         lengthMenu: [10, 20, 30, 40, 50],
         scrollX: true
     }); // end of table
+    // form stock submission
     $("#formStock").submit(function (event) {
         event.preventDefault();
         let form = $("#formStock")[0];
@@ -74,11 +84,24 @@ $(function () {
                         });
                     }
                 });
-            } else {
-                let warehouseData = {
-                    product_id: formData.get('product_id'),
-                    stocks: formData.get('stocks')
-                };
+            }
+        }
+    }); //end of adding stock
+    //  form slip submission
+    $("#formSlip").submit(function (e) {
+        e.preventDefault();
+        let form = $("#formSlip")[0];
+        let formData = new FormData(form);
+        let id = formData.get('id_for_slip');
+        let warehouseData = {
+            product_id: formData.get('product_id_for_slip_for_saving'),
+            stocks: formData.get('remaining_stock_for_slip'),
+            quantity_out: formData.get('quantity_out'),
+            quantity_return: formData.get('quantity_return'),
+            sold: formData.get('total_stock_delivered')
+        };
+        if (this.checkValidity()) {
+            if (id) {
                 $.ajax({
                     url: `${updateStockURL}/${id}`,
                     type: "PUT",
@@ -94,7 +117,7 @@ $(function () {
                             text: 'Stock successfully updated.'
                         }).then(() => {
                             table.ajax.reload(); //reload datatable
-                            $("#modalStock").modal('hide'); //hide modal
+                            $("#modalSlip").modal('hide'); //hide modal
                         });
                     },
                     error: function (e) {
@@ -107,7 +130,7 @@ $(function () {
                 });
             }
         }
-    }); //end of adding/updating product
+    }); // end of form slip
     // get product for updating
     $(document).on("click", "#btnEdit", function (e) {
         let row = $(this).closest("tr");
@@ -120,10 +143,15 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function (response) {
-                $("#modalStock").modal("show");
-                $("#id").val(response.id);
-                $("#product_id").val(response.product_id);
-                $("#stocks").val(response.stocks);
+                $("#modalSlip").modal("show");
+                $("#id_for_slip").val(response.id);
+                $("#product_id_for_slip").val(response.product_id);
+                $("#product_id_for_slip_for_saving").val(response.product_id);
+                $("#stocks_for_slip").val(response.stocks);
+                $("#remaining_stock_for_slip").val(response.stocks);
+                $("#quantity_out").val(response.quantity_out);
+                $("#quantity_return").val(response.quantity_return);
+                $("#total_stock_delivered").val(response.sold);
             },
             error: function (result) {
                 Swal.fire({
@@ -191,12 +219,25 @@ $(function () {
     });
     // clear form after event
     function clearForm() {
+        // modal stocks
         $("#id").val("");
         $("#product_id").val("Choose");
         $("#stocks").val("");
         $("#pcs").val("");
         $("#bxs").val("");
+        // modal slip
+        $("#id_for_slip").val("");
+        $("#product_id_for_slip").val("Choose");
+        $("#stocks_for_slip").val("");
+        $("#quantity_out").val("");
+        $("#quantity_return").val("");
+        $("#total_stock_delivered").val("");
+        $("#remaining_stock_for_slip").val("");
     }
+    // function if modal hide
+    $("#modalStock").on('hidden.bs.modal', function (e) {
+        clearForm();
+    }); //end function
     // function if modal hide
     $("#modalStock").on('hidden.bs.modal', function (e) {
         clearForm();

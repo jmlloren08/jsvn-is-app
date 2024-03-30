@@ -25,6 +25,12 @@
                         <span>Warehouse</span>
                     </a>
                 </li>
+                <!-- <li>
+                    <a href="{{ route('admin.withdrawal') }}" class=" waves-effect">
+                        <i class="ri-home-gear-line"></i>
+                        <span>Withdrawal</span>
+                    </a>
+                </li> -->
             </ul>
             <!-- End of navigation -->
             <!-- Management -->

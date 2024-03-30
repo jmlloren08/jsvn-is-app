@@ -108,5 +108,5 @@
     let updateProductURL = editProductURL;
     let deleteProductURL = editProductURL;
 </script>
-<script src="{{ url('backend/assets/js/crud-products.js') }}"></script>
+<script src="{{ url('backend/assets/js/products.js') }}"></script>
 @endsection
