@@ -24,7 +24,7 @@
                         <div class="d-flex">
                             <div class="flex-grow-1">
                                 <p class="text-truncate font-size-14 mb-2">Daily Sales</p>
-                                <h4 class="mb-2">1452</h4>
+                                <h4 class="mb-2">{{ $totalDailySales }}</h4>
                             </div>
                             <div class="avatar-sm">
                                 <span class="avatar-title bg-light text-primary rounded-3">
@@ -41,7 +41,7 @@
                         <div class="d-flex">
                             <div class="flex-grow-1">
                                 <p class="text-truncate font-size-14 mb-2">Total Products</p>
-                                <h4 class="mb-2">938</h4>
+                                <h4 class="mb-2">{{ $totalProducts }}</h4>
                             </div>
                             <div class="avatar-sm">
                                 <span class="avatar-title bg-light text-success rounded-3">
@@ -58,7 +58,7 @@
                         <div class="d-flex">
                             <div class="flex-grow-1">
                                 <p class="text-truncate font-size-14 mb-2">Total Stock</p>
-                                <h4 class="mb-2">8246</h4>
+                                <h4 class="mb-2">{{ $totalStocks }}</h4>
                             </div>
                             <div class="avatar-sm">
                                 <span class="avatar-title bg-light text-primary rounded-3">
@@ -74,8 +74,8 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="flex-grow-1">
-                                <p class="text-truncate font-size-14 mb-2">Total Sold</p>
-                                <h4 class="mb-2">29670</h4>
+                                <p class="text-truncate font-size-14 mb-2">Total Sold/Delivered</p>
+                                <h4 class="mb-2">{{ $totalSold }}</h4>
                             </div>
                             <div class="avatar-sm">
                                 <span class="avatar-title bg-light text-success rounded-3">
