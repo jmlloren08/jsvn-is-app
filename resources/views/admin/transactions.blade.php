@@ -61,20 +61,16 @@
                                 <div class="row mt-2">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="outlet_id">Outlet</label>
-                                            <select class="form-control custom-select" name="outlet_id" id="outlet_id" required>
-                                                <option value="" selected disabled>Choose</option>
-                                                @foreach ($outlets as $outlet) : ?>
-                                                <option value="{{ $outlet->id }}">{{ $outlet->outlet_name }}</option>
-                                                @endforeach
-                                            </select>
-                                            <div class="valid-feedback">
-                                                Looks good!
-                                            </div>
-                                            <div class="invalid-feedback">
-                                                Please choose outlet.
-                                            </div>
-                                            <input type="hidden" id="outlet_name" name="outlet_name">
+                                            <label for="exampleDataList" class="form-label">Outlet</label>
+                                            <input class="form-control" list="datalistOptions" id="outlet_name" name="outlet_name" placeholder="Type to search...">
+                                            <datalist id="datalistOptions">
+                                                @foreach ($outlets as $outlet)
+                                                <option value="{{ $outlet->outlet_name }}, {{ $outlet->outlet_cities_municipalities }}" data-id="{{ $outlet->id }}">
+                                                    @endforeach
+                                            </datalist>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="hidden" id="outlet_id" name="outlet_id">
                                         </div>
                                     </div>
                                 </div>
@@ -186,7 +182,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="qtty">Quantity: </label>
-                                            <input type="number" class="form-control" id="qtty" name="qtty" required readonly>
+                                            <input type="number" class="form-control" id="qtty" name="qtty" required>
                                         </div>
                                     </div>
                                 </div>
@@ -194,7 +190,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="on_hand">On hand: </label>
-                                            <input type="number" class="form-control" id="on_hand" name="on_hand" required>
+                                            <input type="number" class="form-control" id="on_hand" name="on_hand">
                                         </div>
                                     </div>
                                 </div>
@@ -202,7 +198,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="sold">Sold: </label>
-                                            <input type="number" class="form-control" id="sold" name="sold" required readonly>
+                                            <input type="number" class="form-control" id="sold" name="sold" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -230,9 +226,14 @@
                     <div class="card-body">
                         <div class="row mt-2">
                             <div class="col-md-4">
-                                <label for="company_name">TRA:</label>
+                                <label for="tra">TRA:</label>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="company_name" name="company_name" readonly>
+                                    <select class="form-control custom-select" name="tra" id="tra" required>
+                                        <option value="" selected disabled>Choose</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Check">Check</option>
+                                        <option value="Credit">Credit</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-4"></div>
@@ -251,11 +252,11 @@
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-4">
-                                <label for="filter_outlet_id">OUTLET NAME:</label>
-                                <select class="form-control custom-select" name="filter_outlet_id" id="filter_outlet_id" required>
+                                <label class="form-label">OUTLET NAME:</label>
+                                <select class="form-control select2" name="filter_outlet_id" id="filter_outlet_id" required>
                                     <option value="" selected disabled>Choose</option>
                                     @foreach ($outlets as $outlet)
-                                    <option value="{{ $outlet->id }}">{{ $outlet->outlet_name }}</option>
+                                    <option value="{{ $outlet->id }}">{{ $outlet->outlet_name }}, {{ $outlet->outlet_cities_municipalities }}</option>
                                     @endforeach
                                 </select>
                                 <div class="valid-feedback">
@@ -284,13 +285,7 @@
                             <div class="col-md-4">
                                 <label for="term">TERM:</label>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="term" name="term" readonly>
-                                    <div class="valid-feedback">
-                                        Looks good!
-                                    </div>
-                                    <div class="invalid-feedback">
-                                        Please select date.
-                                    </div>
+                                    <input type="text" class="form-control" id="term" name="term">
                                 </div>
                             </div>
                             <div class="col-md-4"></div>
@@ -392,23 +387,8 @@
 <script src="{{ url('backend/assets/js/print-transaction.js') }}"></script>
 <script>
     $(document).ready(function() {
-        $('#on_hand').on('input', function() {
-            let u_price = parseFloat($('#u_price').val()) || 0;
-            let quantity = parseInt($('#qtty').val()) || 0;
-            let on_hand = parseInt($('#on_hand').val()) || 0;
-            let sold = quantity - on_hand;
-            $('#sold').val(sold);
-            let sub_total = u_price * sold;
-            $('#modal_sub_total').text(sub_total);
-        });
-        $('#discount').on('input', function() {
-            let tableSubTotalPrice = parseFloat($('#hidden_sub_total').val()) || 0;
-            let discountPercentage = parseInt($(this).val()) || 0;
-            let discountAmount = (tableSubTotalPrice * discountPercentage) / 100;
-            let total = tableSubTotalPrice - discountAmount;
-            $('#total_price').html(`<strong>${total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strong>`);
-            $('#discount_amount').val(discountAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-        });
+        
     });
 </script>
+
 @endsection

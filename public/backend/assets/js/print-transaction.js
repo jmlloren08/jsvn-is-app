@@ -1,5 +1,5 @@
 function printReport() {
-    let companyName = $('#company_name').val();
+    let tra = $('#tra').val();
     let filterDate = $('#filter_date').val();
     let outletName = $('#outlet_name_for_print').val();
     let term = $('#term').val();
@@ -28,7 +28,7 @@ function printReport() {
     printWindow.document.write(`<p><strong>Date:</strong> ${filterDate} </p>`);
     printWindow.document.write(`<p><strong>Outlet Name:</strong> ${outletName} </p>`);
     printWindow.document.write(`<p><strong>Outlet Address:</strong> ${outletAddress} </p>`);
-    printWindow.document.write(`<p><strong>TRA:</strong> ${companyName} </p>`);
+    printWindow.document.write(`<p><strong>TRA:</strong> ${tra} </p>`);
     printWindow.document.write(`<p><strong>Term:</strong> ${term} </p>`);
     printWindow.document.write(`<p><strong>Transaction No:</strong> ${transNo} </p>`);
 

@@ -26,6 +26,8 @@
     <link href="{{ url('backend/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
     <!-- sweetalert -->
     <link rel="stylesheet" href="{{ url('backend/assets/libs/sweetalert2/sweetalert2.min.css') }}">
+    <!-- select2 -->
+    <link href="{{ url('backend/assets/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css">
 </head>
 
 <body data-topbar="dark">
@@ -71,6 +73,8 @@
     <script src="{{ url('backend/assets/js/app.js') }}"></script>
     <!-- sweetalert -->
     <script src="{{ url('backend/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="{{ url('backend/assets/libs/select2/js/select2.min.js') }}"></script>
+    <script src="{{ url('backend/assets/js/pages/form-advanced.init.js') }}"></script>
 </body>
 
 </html>

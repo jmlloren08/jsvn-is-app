@@ -66,14 +66,16 @@ class TransactionController extends Controller
     {
         try {
 
-            $request->validate([
-                'on_hand'   => 'required|numeric',
-                'sold'      => 'required|numeric',
-                'total'     => 'required|numeric'
-            ]);
+            // $request->validate([
+            //     'quantity'  => 'required|numeric',
+            //     'on_hand'   => 'required|numeric',
+            //     'sold'      => 'required|numeric',
+            //     'total'     => 'required|numeric'
+            // ]);
 
             $transaction = Transaction::findOrFail($id);
 
+            $transaction->quantity  = $request->quantity;
             $transaction->on_hand   = $request->on_hand;
             $transaction->sold      = $request->sold;
             $transaction->total     = $request->total;
@@ -146,10 +148,10 @@ class TransactionController extends Controller
     public function getTransactionNumber(Request $request)
     {
         $outletId   = $request->input('outlet_id');
-        $date       = $request->input('transaction_date');
+        // $date       = $request->input('transaction_date');
 
         $transaction_no = Transaction::where('outlet_id', $outletId)
-            ->whereDate('transaction_date', $date)
+            // ->whereDate('transaction_date', $date)
             ->distinct()
             ->pluck('transaction_no');
 

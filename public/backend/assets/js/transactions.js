@@ -10,7 +10,6 @@ $(function () {
             },
             data: function (d) {
                 d.outlet_id = $('#filter_outlet_id').val();
-                d.date = $('#filter_date').val();
             }
         },
         columns: [{
@@ -73,15 +72,13 @@ $(function () {
         }
     }); // end of table
     // // // load datatables by outlet and date
-    $('#filter_outlet_id, #filter_date').on('change', function () {
-        let outletId = $('#filter_outlet_id').val();
-        let date = $('#filter_date').val();
+    $('#filter_outlet_id').on('change', function () {
         table.ajax.reload();
     });
     // get transaction number by outlet and date
-    $('#filter_outlet_id, #filter_date').on('change', function () {
+    $('#filter_outlet_id').on('change', function () {
         let outletId = $('#filter_outlet_id').val();
-        let date = $('#filter_date').val();
+        // let date = $('#filter_date').val();
         $.ajax({
             url: getTransactionNoURL,
             type: 'GET',
@@ -89,8 +86,8 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             data: {
-                outlet_id: outletId,
-                transaction_date: date
+                outlet_id: outletId
+                // transaction_date: date
             },
             success: function (response) {
                 $('#trans_no').val(response.transaction_no);
@@ -118,24 +115,6 @@ $(function () {
             }
         });
     });
-    // select outlet on change
-    $('#outlet_id').on('change', function () {
-        let id = $(this).val();
-        $.ajax({
-            url: `${getOutletNameURL}/${id}`,
-            type: 'GET',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function (response) {
-                $('#outlet_name').val(response.outlet_name);
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-    });
-    // end
     // get unit_price from product select
     $('#product_id').on('change', function () {
         let id = $(this).val();
@@ -160,21 +139,19 @@ $(function () {
         let $randomTransactionNo = Math.floor(10000 + Math.random() * 900000);
         $("#transaction_no").val($randomTransactionNo);
     }
-
-    let fieldsAreEmpty = true;
     // function if modal hide
     $("#btnTransact").on('click', function (e) {
-        $('#btnSubmit').prop('disabled', fieldsAreEmpty);
+        $('#btnSubmit').prop('disabled', true);
         generateRandom();
     }); //end function
 
     $('#btnAdd').click(function () {
-        let fieldsAreEmpty = false;
         let outlet_id = $('#outlet_id').val();
         let product_id = $('#product_id').val();
         let unit_price = parseFloat($('#unit_price').val());
         let quantity = parseInt($('#quantity').val());
         let total = unit_price * quantity;
+
         if (!outlet_name || !product_description || !unit_price || !quantity) {
             Swal.fire({
                 icon: 'error',
@@ -183,6 +160,25 @@ $(function () {
             });
             return;
         }
+
+        let productAlreadyAdded = false;
+        $('#dataTableDraft tbody tr').each(function () {
+            let existingProductId = $(this).find('input[name="product_ids[]"]').val();
+            if (existingProductId === product_id) {
+                productAlreadyAdded = true;
+                return false;
+            }
+        });
+
+        if (productAlreadyAdded) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Product already added',
+                text: 'This product is already added for the selected outlet. You can modify the quantity of the existing entry later. Please choose a new/other product.'
+            });
+            return;
+        }
+
         let newRow = $('<tr>').append(
             $('<td>').text($('#outlet_name').val()),
             $('<td>').text($('#product_description').val()),
@@ -190,11 +186,12 @@ $(function () {
             $('<td>').text(quantity),
             $('<td>').text(total.toFixed(2))
         );
+
         newRow.append('<input type="hidden" name="outlet_ids[]" value="' + outlet_id + '">');
         newRow.append('<input type="hidden" name="product_ids[]" value="' + product_id + '">');
-        $('#dataTableDraft tbody').append(newRow);
-        $('#btnSubmit').prop('disabled', fieldsAreEmpty);
-        $('#outlet_id').prop('disabled', true);
+        $('#dataTableDraft tbody').prepend(newRow);
+        $('#outlet_name').prop('disabled', true);
+        $('#btnSubmit').prop('disabled', false);
     });
     // submit form
     $('#formTransaction').submit(function (e) {
@@ -233,7 +230,7 @@ $(function () {
                         transaction_date: transaction_date,
                         transactions: rowsData
                     },
-                    dataType: 'json',
+                    dataType: 'JSON',
                     success: function (response) {
                         Swal.fire({
                             icon: 'success',
@@ -260,6 +257,7 @@ $(function () {
         let on_hand = rowData.on_hand;
         let sold = rowData.sold;
         let unit_price = rowData.unit_price;
+        let sub_total = rowData.total;
         $("#modalEdit").modal("show");
         $('#idForUpdating').val(id);
         $('#prod_desc').val(product_description);
@@ -267,6 +265,7 @@ $(function () {
         $('#qtty').val(quantity);
         $('#on_hand').val(on_hand);
         $('#sold').val(sold);
+        $('#modal_sub_total').text(sub_total);
     });
     //  submit form edit
     $('#formEdit').submit(function (event) {
@@ -277,6 +276,7 @@ $(function () {
         let id = formData.get('idForUpdating');
         if (this.checkValidity()) {
             let updateData = {
+                quantity: formData.get('qtty'),
                 on_hand: formData.get('on_hand'),
                 sold: formData.get('sold'),
                 total: total
@@ -293,11 +293,10 @@ $(function () {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
-                        text: 'Onhand successfully updated.'
+                        text: 'Transaction successfully updated.'
                     }).then(() => {
                         table.ajax.reload(); //reload datatable
                         $("#modalEdit").modal('hide'); //hide modal
-                        console.log(data.message);
                     });
                 },
                 error: function (e) {
@@ -335,16 +334,45 @@ $(document).ready(function () {
     // clear form after event
     function clearFormAndTable() {
         $("#transaction_no").val("");
-        $("#outlet_id").val("Choose");
+        $("#outlet_name").val("");
         $("#product_id").val("Choose");
         $("#unit_price").val("");
         $("#quantity").val("");
         $('#dataTableDraft tbody').empty();
-        $('#outlet_id').prop('disabled', false);
+        $('#outlet_name').prop('disabled', false);
     }
     // function if modal hide
     $("#modalTransact").on('hidden.bs.modal', function (e) {
         clearFormAndTable();
     }); //end function
-
+    // select outlet on change
+    $('#outlet_name').on('change', function () {
+        let selectedId = $("#datalistOptions option[value='" + $(this).val() + "']");
+        let outletId = selectedId.data('id');
+        $('#outlet_id').val(outletId);
+    });
+    // end
+    $('#qtty').on('input', function() {
+        let qtty = $(this).val();
+        let uprice = parseFloat($('#u_price').val()) || 0;
+        let subtotal = uprice * qtty;
+        $('#modal_sub_total').text(subtotal);
+    })
+    $('#on_hand').on('input', function () {
+        let u_price = parseFloat($('#u_price').val()) || 0;
+        let quantity = parseInt($('#qtty').val()) || 0;
+        let on_hand = parseInt($('#on_hand').val()) || 0;
+        let sold = quantity - on_hand;
+        $('#sold').val(sold);
+        let sub_total = u_price * sold;
+        $('#modal_sub_total').text(sub_total);
+    });
+    $('#discount').on('input', function () {
+        let tableSubTotalPrice = parseFloat($('#hidden_sub_total').val()) || 0;
+        let discountPercentage = parseInt($(this).val()) || 0;
+        let discountAmount = (tableSubTotalPrice * discountPercentage) / 100;
+        let total = tableSubTotalPrice - discountAmount;
+        $('#total_price').html(`<strong>${total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strong>`);
+        $('#discount_amount').val(discountAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    });
 });
