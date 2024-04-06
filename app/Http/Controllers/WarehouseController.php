@@ -90,22 +90,43 @@ class WarehouseController extends Controller
     {
         try {
 
-            $request->validate([
-                'product_id'    => 'required|numeric',
-                'stocks'        => 'required|numeric',
-                'quantity_out'  => 'required|numeric'
-            ]);
-
             $warehouse = Warehouse::findOrFail($id);
 
-            $warehouse->product_id      = $request->product_id;
-            $warehouse->stocks          = $request->stocks;
+            $warehouse->product_id      = $request->product_id_for_slip;
+            $warehouse->stocks          = $request->remaining_stock_for_slip;
             $warehouse->quantity_out    = $request->quantity_out;
             $warehouse->quantity_return = $request->quantity_return;
             $warehouse->sold            = $request->sold;
-            $warehouse->save();
+            $warehouse->update();
 
-            return response()->json(['message' =>  'Data updated successfully.']);
+            return response()->json(['message' => 'Data successfully updated']);
+        } catch (\Exception $e) {
+
+            Log::error("Error updating product: " . $e->getMessage());
+            return response()->json(['message' => 'Internal server error'], 500);
+        }
+    }
+    public function clearStock($id)
+    {
+        Warehouse::where('id', $id)->update([
+            'quantity_out'      => null,
+            'quantity_return'   => null,
+            'sold'              => null
+        ]);
+
+        return response()->json(['message' => 'Out, return and total delivered cleared successfully.'], 200);
+    }
+    public function storeNewStock(Request $request, $id)
+    {
+        try {
+
+            $warehouse = Warehouse::findOrFail($id);
+
+            $warehouse->product_id  = $request->product_id_for_new_stock;
+            $warehouse->stocks      = $request->total_stock;
+            $warehouse->update();
+
+            return response()->json(['message' =>  'Data added successfully.']);
         } catch (\Exception $e) {
 
             Log::error("Error updating product: " . $e->getMessage());
@@ -116,6 +137,6 @@ class WarehouseController extends Controller
     {
         Warehouse::where('id', $id)->delete();
 
-        return response()->json(['message' => 'Product deleted successfully.'], 200);
+        return response()->json(['message' => 'Stock deleted successfully.'], 200);
     }
 }

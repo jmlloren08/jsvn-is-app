@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <!-- modal show -->
+        <!-- modal stock show -->
         <div class="modal fade" id="modalStock" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -144,7 +144,7 @@
             </div>
         </div>
         <!-- end modal -->
-        <!-- modal show -->
+        <!-- modal slip show -->
         <div class="modal fade" id="modalSlip" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -257,6 +257,113 @@
             </div>
         </div>
         <!-- end modal -->
+        <!-- modal add new stock show -->
+        <div class="modal fade" id="modalAddNewStock" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Stock details</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formAddNewStock" class="needs-validation" novalidate>
+                            @csrf
+                            <div class="card-body">
+                                <input type="hidden" id="id_for_add_new_stock" name="id_for_add_new_stock">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="product_id_for_add_new_stock">Product</label>
+                                            <input type="hidden" id="product_id_for_add_new_stock_for_saving" name="product_id_for_add_new_stock_for_saving">
+                                            <select class="form-control custom-select" name="product_id_for_add_new_stock" id="product_id_for_add_new_stock" disabled>
+                                                <option value="" selected disabled>Choose</option>
+                                                @foreach ($products as $product)
+                                                <option value="{{ $product->id }}">{{ $product->product_description }}</option>
+                                                @endforeach
+                                            </select>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Please choose product.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="old_stock">Old Stock</label>
+                                            <input type="number" class="form-control" id="old_stock" name="old_stock" readonly>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Please enter valid number.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="new_bxs">New (Boxes/Cases)</label>
+                                            <input type="number" class="form-control" id="new_bxs" name="new_bxs" placeholder="e.g. 225" required>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Please enter valid number.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="new_pcs">New (Pcs/box or Btl/cases)</label>
+                                            <input type="number" class="form-control" id="new_pcs" name="new_pcs" placeholder="e.g. 30" required>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Please enter valid number.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="new_remainder">Remainder (optional)</label>
+                                            <input type="number" class="form-control" id="new_remainder" name="new_remainder" placeholder="optional">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="total_stock">Total stock</label>
+                                            <input type="number" class="form-control" id="total_stock" name="total_stock" readonly>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Please enter valid number.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" class="btn btn-primary" value="Submit">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal -->
         <div class="mb-3"></div>
         <div class="row">
             <div class="col-xl-12">
@@ -297,29 +404,11 @@
     let getStockURL = "{{ route('admin.warehouse.getStocks') }}";
     let storeStockURL = "{{ route('admin.warehouse.store') }}";
     let editStockURL = "/admin/warehouse";
-    let updateStockURL = editStockURL;
     let deleteStockURL = editStockURL;
+    let updateStockURL = editStockURL;
+    let clearStockURL = editStockURL;
+    let addNewStockURL = "/admin/warehouse";
 </script>
 <script src="{{ url('backend/assets/js/warehouse.js') }}"></script>
 <script src="{{ url('backend/assets/js/print-warehouse.js') }}"></script>
-<script>
-    $(document).ready(function() {
-        $('#bxs, #pcs, #remainder').on('input', function() {
-            let bxs = parseInt($('#bxs').val()) || 0;
-            let pcsPerBox = parseInt($('#pcs').val()) || 0;
-            let remainder = parseInt($('#remainder').val()) || 0;
-            let stocks = (bxs * pcsPerBox) + remainder;
-            $('#stocks').val(stocks);
-        });
-        $('#quantity_return').on('input', function() {
-            let stocks = parseInt($('#stocks_for_slip').val()) || 0;
-            let quantity_out = parseInt($('#quantity_out').val()) || 0;
-            let quantity_return = parseInt($('#quantity_return').val()) || 0;
-            let totalStockDelivered = quantity_out - quantity_return;
-            let remainingStocks = stocks - totalStockDelivered;
-            $('#total_stock_delivered').val(totalStockDelivered);
-            $('#remaining_stock_for_slip').val(remainingStocks);
-        });
-    });
-</script>
 @endsection

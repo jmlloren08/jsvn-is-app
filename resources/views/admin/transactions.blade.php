@@ -228,12 +228,7 @@
                             <div class="col-md-4">
                                 <label for="tra">TRA:</label>
                                 <div class="form-group">
-                                    <select class="form-control custom-select" name="tra" id="tra" required>
-                                        <option value="" selected disabled>Choose</option>
-                                        <option value="Cash">Cash</option>
-                                        <option value="Check">Check</option>
-                                        <option value="Credit">Credit</option>
-                                    </select>
+                                    <input type="text" class="form-control" id="tra" name="tra">
                                 </div>
                             </div>
                             <div class="col-md-4"></div>
@@ -285,7 +280,12 @@
                             <div class="col-md-4">
                                 <label for="term">TERM:</label>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="term" name="term">
+                                    <select class="form-control custom-select" name="term" id="term" required>
+                                        <option value="" selected disabled>Choose</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Check">Check</option>
+                                        <option value="Credit">Credit</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-4"></div>
@@ -381,14 +381,10 @@
     let getOutletNameAddressURL = "/get-outlet-name-address";
     let getOutletNameURL = "/get-outlet-name";
     let updateOnhandURL = "/admin/transactions";
+    let deleteTransactionURL = "/admin/transactions";
     let getUnitPriceAndDescriptionURL = "/get-unit-price-and-description";
 </script>
 <script src="{{ url('backend/assets/js/transactions.js') }}"></script>
 <script src="{{ url('backend/assets/js/print-transaction.js') }}"></script>
-<script>
-    $(document).ready(function() {
-        
-    });
-</script>
 
 @endsection

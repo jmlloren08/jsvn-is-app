@@ -309,6 +309,47 @@ $(function () {
             });
         }
     });
+    // delete stock
+    $(document).on("click", "#btnDelete", function (e) {
+        let row = $(this).closest("tr");
+        let data = table.row(row).data();
+        let id = data.id;
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to revert this.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `${deleteTransactionURL}/${id}`,
+                    type: "DELETE",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Transaction has been deleted successfully.'
+                        }).then(() => {
+                            table.ajax.reload();
+                        });
+                    },
+                    error: function (result) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong.'
+                        });
+                    }
+                });
+            }
+        });
+    });
 });
 $("#modalEdit").on('hidden.bs.modal', function (e) {
     $('#idForUpdating').val("");
@@ -352,7 +393,7 @@ $(document).ready(function () {
         $('#outlet_id').val(outletId);
     });
     // end
-    $('#qtty').on('input', function() {
+    $('#qtty').on('input', function () {
         let qtty = $(this).val();
         let uprice = parseFloat($('#u_price').val()) || 0;
         let subtotal = uprice * qtty;

@@ -45,20 +45,23 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/outlets', [OutletController::class, 'store'])->name('admin.outlets.store');
     Route::post('/admin/warehouse', [WarehouseController::class, 'store'])->name('admin.warehouse.store');
     Route::post('/admin/transactions', [TransactionController::class, 'store'])->name('admin.transactions.store');
-    // update existing products/outlets/stocks/onhand
+    // update existing products/outlets/stocks/onhand/addnewstock
     Route::put('/admin/products/{id}', [ProductController::class, 'update']);
     Route::put('/admin/outlets/{id}', [OutletController::class, 'update']);
-    Route::put('/admin/warehouse/{id}', [WarehouseController::class, 'update']);
+    Route::put('/admin/warehouse/{id}/update', [WarehouseController::class, 'update']);
+    Route::put('/admin/warehouse/{id}/storeNewStock', [WarehouseController::class, 'storeNewStock']);
+    Route::put('/admin/warehouse/{id}', [WarehouseController::class, 'clearStock']);
     Route::put('/admin/transactions/{id}', [TransactionController::class, 'update']);
     // route to fetch products/outlets/stocks/transactions
     Route::post('/admin/products/getProducts', [ProductController::class, 'getProducts'])->name('admin.products.getProducts');
     Route::post('/admin/outlets/getOutlets', [OutletController::class, 'getOutlets'])->name('admin.outlets.getOutlets');
     Route::post('/admin/warehouse/getStocks', [WarehouseController::class, 'getStocks'])->name('admin.warehouse.getStocks');
     Route::post('/admin/transactions/getTransactions', [TransactionController::class, 'getTransactions'])->name('admin.transactions.getTransactions');
-    // delete product/outlet
+    // delete product/outlet/warehouse
     Route::delete('/admin/products/{id}', [ProductController::class, 'delete']);
     Route::delete('/admin/outlets/{id}', [OutletController::class, 'delete']);
     Route::delete('/admin/warehouse/{id}', [WarehouseController::class, 'delete']);
+    Route::delete('/admin/transactions/{id}', [TransactionController::class, 'delete']);
     // profile
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

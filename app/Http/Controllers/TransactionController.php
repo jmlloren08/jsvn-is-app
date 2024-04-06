@@ -66,20 +66,13 @@ class TransactionController extends Controller
     {
         try {
 
-            // $request->validate([
-            //     'quantity'  => 'required|numeric',
-            //     'on_hand'   => 'required|numeric',
-            //     'sold'      => 'required|numeric',
-            //     'total'     => 'required|numeric'
-            // ]);
-
             $transaction = Transaction::findOrFail($id);
 
             $transaction->quantity  = $request->quantity;
             $transaction->on_hand   = $request->on_hand;
             $transaction->sold      = $request->sold;
             $transaction->total     = $request->total;
-            $transaction->save();
+            $transaction->update();
 
             return response()->json(['message' => 'Date updated successfully.']);
         } catch (\Exception $e) {
@@ -156,5 +149,11 @@ class TransactionController extends Controller
             ->pluck('transaction_no');
 
         return response()->json(['transaction_no' => $transaction_no]);
+    }
+    public function delete($id)
+    {
+        Transaction::where('id', $id)->delete();
+
+        return response()->json(['message' => 'Transaction deleted successfully.'], 200);
     }
 }
