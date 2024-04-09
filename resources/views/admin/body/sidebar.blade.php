@@ -56,17 +56,6 @@
                 </li>
             </ul>
             <!-- End of management -->
-            <!-- Admin Panel -->
-            <ul class="metismenu list-unstyled" id="side-menu">
-                <li class="menu-title">ADMIN PANEL</li>
-                <li>
-                    <a href="{{ route('admin.users') }}" class=" waves-effect">
-                        <i class="ri-account-box-line"></i>
-                        <span>Users</span>
-                    </a>
-                </li>
-            </ul>
-            <!-- End of admin panel -->
         </div>
         <!-- Sidebar -->
     </div>

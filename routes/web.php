@@ -7,13 +7,14 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WithdrawalController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+// Route::get('/', function () {
+//     return view('auth.login');
+// });
 
 // admin all route
 Route::controller(AdminController::class)->group(function () {
@@ -24,6 +25,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 
 Route::middleware('auth')->group(function () {
     // display view
+    Route::get('/', [DashboardController::class, 'index']);
     Route::get('/admin/profile', [ProfileController::class, 'index'])->name('admin.profile');
     Route::get('/admin/transactions', [TransactionController::class, 'index'])->name('admin.transactions');
     Route::get('/admin/warehouse', [WarehouseController::class, 'index'])->name('admin.warehouse');
@@ -63,9 +65,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/warehouse/{id}', [WarehouseController::class, 'delete']);
     Route::delete('/admin/transactions/{id}', [TransactionController::class, 'delete']);
     // profile
-    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users');
+    Route::patch('/admin/users', [UserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users', [UserController::class, 'destroy'])->name('admin.users.destroy');
     // Route::resource('/admin/products/', 'ProductController');
 });
 
