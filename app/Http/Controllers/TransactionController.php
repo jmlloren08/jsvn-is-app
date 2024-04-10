@@ -16,24 +16,28 @@ class TransactionController extends Controller
     {
         $outlets = Outlet::all();
         $products = Product::all();
-
+        $traNumbers = Transaction::distinct()->pluck('tra_number');
         return view('admin.transactions', [
             'outlets'       => $outlets,
-            'products'      => $products
+            'products'      => $products,
+            'traNumbers'    => $traNumbers
         ]);
+
     }
     public function store(Request $request)
     {
         try {
+
             $validator = Validator::make($request->all(), [
-                'transaction_no'                    => 'required|numeric',
-                'transaction_date'                  => 'required|date',
-                'transactions'                      => 'required|array',
-                'transactions.*.outlet_id'          => 'required|numeric',
-                'transactions.*.product_id'         => 'required|numeric',
-                'transactions.*.unit_price'         => 'required|numeric',
-                'transactions.*.quantity'           => 'required|numeric',
-                'transactions.*.total'              => 'required|numeric'
+                'transaction_no'            => 'required|numeric',
+                'tra_number'                => 'required|numeric',
+                'transaction_date'          => 'required|date',
+                'transactions'              => 'required|array',
+                'transactions.*.outlet_id'  => 'required|numeric',
+                'transactions.*.product_id' => 'required|numeric',
+                'transactions.*.unit_price' => 'required|numeric',
+                'transactions.*.quantity'   => 'required|numeric',
+                'transactions.*.total'      => 'required|numeric'
             ]);
 
             if ($validator->fails()) {
@@ -41,12 +45,14 @@ class TransactionController extends Controller
             }
 
             $transaction_no     = $request->transaction_no;
+            $tra_number         = $request->tra_number;
             $transaction_date   = $request->transaction_date;
             $transactions       = $request->transactions;
 
             foreach ($transactions as $transactionData) {
                 $transaction = new Transaction;
                 $transaction->transaction_no    =   $transaction_no;
+                $transaction->tra_number        =   $tra_number;
                 $transaction->transaction_date  =   $transaction_date;
                 $transaction->outlet_id         =   $transactionData['outlet_id'];
                 $transaction->product_id        =   $transactionData['product_id'];
@@ -114,7 +120,8 @@ class TransactionController extends Controller
                     'transactions.on_hand',
                     'transactions.sold',
                     'transactions.unit_price',
-                    'transactions.total'
+                    'transactions.total',
+                    'transactions.discounted_price'
                 ], 'like', "%$searchValue%");
             });
         }
@@ -155,5 +162,27 @@ class TransactionController extends Controller
         Transaction::where('id', $id)->delete();
 
         return response()->json(['message' => 'Transaction deleted successfully.'], 200);
+    }
+    public function addDiscount(Request $request)
+    {
+        try {
+
+            $discounts = $request->discounts;
+            // loop through each item in the discount array
+            foreach ($discounts as $discountData) {
+                $id = $discountData['id'];
+                $discountedPrice = $discountData['discounted_price'];
+                // by the transaction record by id
+                $transaction = Transaction::findOrFail($id);
+                // update discounted price of each and every transaction id found
+                $transaction->discounted_price = $discountedPrice;
+                $transaction->update();
+            }
+
+            return response()->json(['message' => 'Data added successfully.']);
+        } catch (\Exception $e) {
+            Log::error("Error adding discount: " . $e->getMessage());
+            return response()->json(['message' => 'Internal server error'], 500);
+        }
     }
 }

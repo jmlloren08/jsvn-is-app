@@ -17,6 +17,7 @@ class Transaction extends Model
      */
     protected $fillable = [
         'transaction_no',
+        'tra_number',
         'transaction_date',
         'company_id',
         'outlet_id',
@@ -27,7 +28,8 @@ class Transaction extends Model
         'on_hand',
         'sold',
         'unit_price',
-        'total'
+        'total',
+        'discounted_price'
     ];
 
     public function company()

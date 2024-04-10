@@ -10,6 +10,7 @@ $(function () {
             },
             data: function (d) {
                 d.outlet_id = $('#filter_outlet_id').val();
+                d.tra_number = $('#filter_tra_number').val();
             }
         },
         columns: [{
@@ -36,6 +37,10 @@ $(function () {
         },
         {
             data: 'total',
+            render: $.fn.DataTable.render.number(',', '.', 2, '₱')
+        },
+        {
+            data: 'discounted_price',
             render: $.fn.DataTable.render.number(',', '.', 2, '₱')
         },
         {
@@ -71,8 +76,8 @@ $(function () {
             $('#hidden_sub_total').val(total.toFixed(2));
         }
     }); // end of table
-    // // // load datatables by outlet and date
-    $('#filter_outlet_id').on('change', function () {
+    // // // load datatables by outlet and filter_tra_number
+    $('#filter_outlet_id, #filter_tra_number').on('change', function () {
         table.ajax.reload();
     });
     // get transaction number by outlet and date
@@ -191,12 +196,14 @@ $(function () {
         newRow.append('<input type="hidden" name="product_ids[]" value="' + product_id + '">');
         $('#dataTableDraft tbody').prepend(newRow);
         $('#outlet_name').prop('disabled', true);
+        $('#tra_number').prop('disabled', true);
         $('#btnSubmit').prop('disabled', false);
     });
     // submit form
     $('#formTransaction').submit(function (e) {
         e.preventDefault();
         let transaction_no = $('#transaction_no').val();
+        let tra_number = $('#tra_number').val();
         let transaction_date = $('#transaction_date').val();
         let rowsData = [];
         $('#dataTableDraft tbody tr').each(function () {
@@ -227,6 +234,7 @@ $(function () {
                     },
                     data: {
                         transaction_no: transaction_no,
+                        tra_number: tra_number,
                         transaction_date: transaction_date,
                         transactions: rowsData
                     },
@@ -350,6 +358,107 @@ $(function () {
             }
         });
     });
+    // add discount
+    $('#btnAddDiscount').on('click', function () {
+        let onhandAlreadyAdded = true;
+        let discountAlreadyAdded = false;
+        // iterate over each row in the data table
+        $('#dataTableSubmitted tbody tr').each(function () {
+            let on_hand = $(this).find('td:eq(4)').text();
+            let discount = $(this).find('td:eq(8)').text();
+            // if any on-hand value is empty or not a number, set to false
+            if (!on_hand || isNaN(parseInt(on_hand))) {
+                onhandAlreadyAdded = false;
+                return false;
+            }
+            // if discount has a value, set false
+            if (discount) {
+                discountAlreadyAdded = true;
+                return false;
+            }
+        });
+        // check if outlet selected and discount are filled.
+        if (!$('#filter_outlet_id').val() || !parseInt($('#discount').val())) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Outlet and discount required',
+                text: 'Please choose an outlet name and enter a discount amount to proceed.'
+            });
+            return;
+        }
+        // check if not all on-hand values are filled.
+        if (!onhandAlreadyAdded) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Onhand required',
+                text: 'Please update all on-hand products with the selected outlet name to proceed.'
+            });
+            return;
+        }
+        // check if all discount values are filled.
+        if (discountAlreadyAdded) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Discount already added',
+                text: 'Please add discount to empty discount column only.'
+            });
+            return;
+        }
+        // proceed adding discount
+        let discountPercentage = parseInt($('#discount').val()) || 0;
+        let discountedPrice = [];
+
+        $('#dataTableSubmitted tbody tr').each(function () {
+            let id = $(this).find('td:eq(0)').text();
+            let sub_total = $(this).find('td:eq(7)').text();
+            let numerical_value = parseFloat(sub_total.replace('₱', '').replace(',', '')) || 0;
+            let discountAmount = (numerical_value * discountPercentage) / 100;
+            let discounted_price = numerical_value - discountAmount;
+
+            discountedPrice.push({
+                id: id,
+                discounted_price: discounted_price
+            });
+
+        });
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to revert this.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, add it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: addDiscountURL,
+                    type: 'PUT',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        discounts: discountedPrice
+                    },
+                    dataType: 'JSON',
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Discount added successfully.'
+                        }).then(() => {
+                            table.ajax.reload(); //reload datatable
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error.message);
+                    }
+                });
+            }
+        });
+    });
+    // end of adding discount
 });
 $("#modalEdit").on('hidden.bs.modal', function (e) {
     $('#idForUpdating').val("");
@@ -381,6 +490,7 @@ $(document).ready(function () {
         $("#quantity").val("");
         $('#dataTableDraft tbody').empty();
         $('#outlet_name').prop('disabled', false);
+        $('#tra_number').prop('disabled', false);
     }
     // function if modal hide
     $("#modalTransact").on('hidden.bs.modal', function (e) {
@@ -407,13 +517,5 @@ $(document).ready(function () {
         $('#sold').val(sold);
         let sub_total = u_price * sold;
         $('#modal_sub_total').text(sub_total);
-    });
-    $('#discount').on('input', function () {
-        let tableSubTotalPrice = parseFloat($('#hidden_sub_total').val()) || 0;
-        let discountPercentage = parseInt($(this).val()) || 0;
-        let discountAmount = (tableSubTotalPrice * discountPercentage) / 100;
-        let total = tableSubTotalPrice - discountAmount;
-        $('#total_price').html(`<strong>${total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strong>`);
-        $('#discount_amount').val(discountAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     });
 });

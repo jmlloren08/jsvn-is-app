@@ -47,6 +47,14 @@
                                 <div class="row mt-2">
                                     <div class="col-md-12">
                                         <div class="form-group">
+                                            <label for="tra_number">TRA NUMBER: </label>
+                                            <input type="number" class="form-control" id="tra_number" name="tra_number" placeholder="Enter tra number here..." required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
                                             <label for="transaction_date">Transaction Date</label>
                                             <input type="date" class="form-control" id="transaction_date" name="transaction_date" value="{{ date('Y-m-d') }}" required>
                                             <div class="valid-feedback">
@@ -226,9 +234,18 @@
                     <div class="card-body">
                         <div class="row mt-2">
                             <div class="col-md-4">
-                                <label for="tra">TRA:</label>
-                                <div class="form-group">
-                                    <input type="text" class="form-control" id="tra" name="tra">
+                                <label for="filter_tra_number">TRA:</label>
+                                <select class="form-control custom-select" name="filter_tra_number" id="filter_tra_number" required>
+                                    <option value="" selected disabled>Choose</option>
+                                    @foreach ($traNumbers as $traNumber)
+                                    <option value="{{ $traNumber }}">{{ $traNumber }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please choose TRA number.
                                 </div>
                             </div>
                             <div class="col-md-4"></div>
@@ -306,7 +323,40 @@
                 </div>
             </div>
         </div>
-        <div class="mt-2"></div>
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- <p class="mb-0" id="table_sub_total_price" style="color: red;"></p> -->
+                                <input type="hidden" class="form-control" id="hidden_sub_total" name="hidden_sub_total">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="number" class="form-control" id="discount" name="discount" placeholder="Enter discount here... e.g. (10)%">
+                                <input type="hidden" class="form-control" id="discount_amount" name="discount_amount">
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4"></div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-3">
+                                <input type="button" class="btn btn-success" id="btnAddDiscount" value="Add discount">
+                            </div>
+                        </div>
+                        <!-- <div class="row mt-2">
+                            <div class="col-md-12">
+                                <p class="mb-0">Total: </p>
+                                <p id="total_price"></p>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- datatable -->
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
@@ -328,11 +378,12 @@
                                         <th>#</th>
                                         <th>DATE DELIVERED</th>
                                         <th>DESCRIPTION</th>
-                                        <th>QUANTITY</th>
+                                        <th>QTY</th>
                                         <th>ON_HAND</th>
                                         <th>SOLD</th>
                                         <th>UNIT_PRICE</th>
                                         <th>SUB_TOTAL</th>
+                                        <th>DISCOUNTED_PRICE</th>
                                         <th>ACTION</th>
                                     </tr>
                                 </thead><!-- end thead -->
@@ -342,36 +393,7 @@
                 </div><!-- end card -->
             </div><!-- end col -->
         </div><!-- end row -->
-        <div class="mt-2"></div>
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <p class="mb-0"> Subtotal:</p>
-                                <p class="mb-0" id="table_sub_total_price" style="color: red;"></p>
-                                <input type="hidden" class="form-control" id="hidden_sub_total" name="hidden_sub_total">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <input type="number" class="form-control" id="discount" name="discount" placeholder="Discount">
-                                <input type="hidden" class="form-control" id="discount_amount" name="discount_amount">
-                            </div>
-                            <div class="col-md-4"></div>
-                            <div class="col-md-4"></div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-12">
-                                <p class="mb-0">Total: </p>
-                                <p id="total_price"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 </div>
 <script>
@@ -382,6 +404,7 @@
     let getOutletNameURL = "/get-outlet-name";
     let updateOnhandURL = "/admin/transactions";
     let deleteTransactionURL = "/admin/transactions";
+    let addDiscountURL = "/admin/transactions";
     let getUnitPriceAndDescriptionURL = "/get-unit-price-and-description";
 </script>
 <script src="{{ url('backend/assets/js/transactions.js') }}"></script>
