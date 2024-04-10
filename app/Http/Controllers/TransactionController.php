@@ -16,13 +16,15 @@ class TransactionController extends Controller
     {
         $outlets = Outlet::all();
         $products = Product::all();
-        $traNumbers = Transaction::distinct()->pluck('tra_number');
+        $traNumbers = Transaction::whereNotNull('tra_number')
+            ->where('tra_number', '!=', 0)
+            ->distinct()
+            ->pluck('tra_number');
         return view('admin.transactions', [
             'outlets'       => $outlets,
             'products'      => $products,
             'traNumbers'    => $traNumbers
         ]);
-
     }
     public function store(Request $request)
     {
@@ -89,7 +91,7 @@ class TransactionController extends Controller
     public function getTransactions(Request $request)
     {
         $outletId       = $request->input('outlet_id');
-        $date           = $request->input('date');
+        $tra_number     = $request->input('tra_number');
 
         $draw           = $request->input('draw');
         $start          = $request->input('start');
@@ -106,8 +108,8 @@ class TransactionController extends Controller
             $query->where('transactions.outlet_id', $outletId);
         }
 
-        if (!empty($date)) {
-            $query->where('transactions.transaction_date', $date);
+        if (!empty($tra_number)) {
+            $query->where('transactions.tra_number', $tra_number);
         }
 
         if (!empty($searchValue)) {

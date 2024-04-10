@@ -235,17 +235,19 @@
                         <div class="row mt-2">
                             <div class="col-md-4">
                                 <label for="filter_tra_number">TRA:</label>
-                                <select class="form-control custom-select" name="filter_tra_number" id="filter_tra_number" required>
-                                    <option value="" selected disabled>Choose</option>
-                                    @foreach ($traNumbers as $traNumber)
-                                    <option value="{{ $traNumber }}">{{ $traNumber }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="valid-feedback">
-                                    Looks good!
-                                </div>
-                                <div class="invalid-feedback">
-                                    Please choose TRA number.
+                                <div class="form-group">
+                                    <select class="form-control select2" name="filter_tra_number" id="filter_tra_number" required>
+                                        <option value="" selected disabled>Choose</option>
+                                        @foreach ($traNumbers as $traNumber)
+                                        <option value="{{ $traNumber }}">{{ $traNumber }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose TRA number.
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-4"></div>
@@ -265,17 +267,19 @@
                         <div class="row mt-2">
                             <div class="col-md-4">
                                 <label class="form-label">OUTLET NAME:</label>
-                                <select class="form-control select2" name="filter_outlet_id" id="filter_outlet_id" required>
-                                    <option value="" selected disabled>Choose</option>
-                                    @foreach ($outlets as $outlet)
-                                    <option value="{{ $outlet->id }}">{{ $outlet->outlet_name }}, {{ $outlet->outlet_cities_municipalities }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="valid-feedback">
-                                    Looks good!
-                                </div>
-                                <div class="invalid-feedback">
-                                    Please choose outlet.
+                                <div class="form-group">
+                                    <select class="form-control select2" name="filter_outlet_id" id="filter_outlet_id" required>
+                                        <option value="" selected disabled>Choose</option>
+                                        @foreach ($outlets as $outlet)
+                                        <option value="{{ $outlet->id }}">{{ $outlet->outlet_name }}, {{ $outlet->outlet_cities_municipalities }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose outlet.
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-4"></div>
@@ -329,8 +333,8 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <!-- <p class="mb-0" id="table_sub_total_price" style="color: red;"></p> -->
-                                <input type="hidden" class="form-control" id="hidden_sub_total" name="hidden_sub_total">
+                                <input type="hidden" class="form-control" id="table_sub_total_price" name="table_sub_total_price">
+                                <input type="hidden" class="form-control" id="total_discounted_price" name="total_discounted_price">
                             </div>
                         </div>
                         <div class="row">

@@ -67,13 +67,18 @@ $(function () {
         // calculate and display total_price
         drawCallback: function () {
             let api = this.api();
-            let total = api.column(7, {
+            let total_sub_total = api.column(7, {
                 page: 'current'
             }).data().reduce(function (a, b) {
                 return a + parseFloat(b);
             }, 0);
-            $('#table_sub_total_price').text(total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-            $('#hidden_sub_total').val(total.toFixed(2));
+            let total_discount = api.column(8, {
+                page: 'current'
+            }).data().reduce(function (a, b) {
+                return a + parseFloat(b);
+            }, 0);
+            $('#table_sub_total_price').val(total_sub_total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            $('#total_discounted_price').val(total_discount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
         }
     }); // end of table
     // // // load datatables by outlet and filter_tra_number
@@ -83,7 +88,6 @@ $(function () {
     // get transaction number by outlet and date
     $('#filter_outlet_id').on('change', function () {
         let outletId = $('#filter_outlet_id').val();
-        // let date = $('#filter_date').val();
         $.ajax({
             url: getTransactionNoURL,
             type: 'GET',
@@ -92,7 +96,6 @@ $(function () {
             },
             data: {
                 outlet_id: outletId
-                // transaction_date: date
             },
             success: function (response) {
                 $('#trans_no').val(response.transaction_no);
@@ -372,17 +375,26 @@ $(function () {
                 return false;
             }
             // if discount has a value, set false
-            if (discount) {
+            if (discount.trim() !== '' && parseFloat(discount.replace('₱', '').replace(',', ''))) {
                 discountAlreadyAdded = true;
                 return false;
             }
         });
-        // check if outlet selected and discount are filled.
-        if (!$('#filter_outlet_id').val() || !parseInt($('#discount').val())) {
+        // check if outlet name has value.
+        if (!$('#filter_outlet_id').val()) {
             Swal.fire({
                 icon: 'error',
-                title: 'Outlet and discount required',
-                text: 'Please choose an outlet name and enter a discount amount to proceed.'
+                title: 'Outlet name is required',
+                text: 'Please choose an outlet name to proceed.'
+            });
+            return;
+        }
+        // check if discount has value.
+        if (!parseInt($('#discount').val())) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Discount is required',
+                text: 'Please enter a discount amount to proceed.'
             });
             return;
         }
