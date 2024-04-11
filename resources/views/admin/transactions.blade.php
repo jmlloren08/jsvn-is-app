@@ -48,7 +48,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="tra_number">TRA NUMBER: </label>
-                                            <input type="number" class="form-control" id="tra_number" name="tra_number" placeholder="Enter tra number here..." required>
+                                            <input type="number" class="form-control" id="tra_number" name="tra_number" placeholder="Enter TRA number here..." required>
                                         </div>
                                     </div>
                                 </div>
