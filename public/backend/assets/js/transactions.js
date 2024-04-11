@@ -77,8 +77,8 @@ $(function () {
             }).data().reduce(function (a, b) {
                 return a + parseFloat(b);
             }, 0);
-            $('#table_sub_total_price').val(total_sub_total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-            $('#total_discounted_price').val(total_discount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            $('#table_sub_total_price').val('Subtotal: ' + total_sub_total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            $('#total_discounted_price').val('Total discounted price: ' + total_discount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
         }
     }); // end of table
     // // // load datatables by outlet and filter_tra_number

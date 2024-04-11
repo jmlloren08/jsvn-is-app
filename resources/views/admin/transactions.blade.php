@@ -327,16 +327,11 @@
                 </div>
             </div>
         </div>
+        <!-- add discount section -->
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <input type="hidden" class="form-control" id="table_sub_total_price" name="table_sub_total_price">
-                                <input type="hidden" class="form-control" id="total_discounted_price" name="total_discounted_price">
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="col-md-4">
                                 <input type="number" class="form-control" id="discount" name="discount" placeholder="Enter discount here... e.g. (10)%">
@@ -350,17 +345,12 @@
                                 <input type="button" class="btn btn-success" id="btnAddDiscount" value="Add discount">
                             </div>
                         </div>
-                        <!-- <div class="row mt-2">
-                            <div class="col-md-12">
-                                <p class="mb-0">Total: </p>
-                                <p id="total_price"></p>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
             </div>
         </div>
-        <!-- datatable -->
+        <!-- end section -->
+        <!-- datatable section -->
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
@@ -396,8 +386,31 @@
                     </div><!-- end card -->
                 </div><!-- end card -->
             </div><!-- end col -->
-        </div><!-- end row -->
-
+        </div><!-- end section -->
+        <!-- sub total and total discount section -->
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="table_sub_total_price" name="table_sub_total_price" style="background-color: transparent; border-color: transparent" readonly>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="total_discounted_price" name="total_discounted_price" style="background-color: transparent; border-color: transparent" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end section -->
     </div>
 </div>
 <script>

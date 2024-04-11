@@ -67,13 +67,13 @@ function printReport() {
 
     printWindow.document.write('<table>');
     printWindow.document.write('<thead><tr>');
-    printWindow.document.write(`<td>Subtotal: ${tableSubTotalPrice}</td>`);
+    printWindow.document.write(`<td>${tableSubTotalPrice}</td>`);
     printWindow.document.write('</tr></thead><tbody>');
     printWindow.document.write('</tbody></table>');
 
     printWindow.document.write('<table>');
     printWindow.document.write('<thead><tr>');
-    printWindow.document.write(`<th>Total Discounted Price: ${totalDiscountedPrice}</th>`);
+    printWindow.document.write(`<th>${totalDiscountedPrice}</th>`);
     printWindow.document.write('</tr></thead><tbody>');
     printWindow.document.write('</tbody></table>');
 
