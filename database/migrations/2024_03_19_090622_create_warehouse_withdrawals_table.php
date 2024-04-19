@@ -15,10 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->date('withdrawal_date');
             $table->unsignedBigInteger('product_id');
-            $table->foreign('product_id')
-                ->references('id')->on('products')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->foreignId('user_id')->nullable()->index();
             $table->integer('quantity_out')->nullable();
             $table->integer('quantity_return')->nullable();
             $table->integer('sold')->nullable();

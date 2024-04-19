@@ -73,7 +73,9 @@
     <script src="{{ url('backend/assets/js/app.js') }}"></script>
     <!-- sweetalert -->
     <script src="{{ url('backend/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+    <!-- select2 -->
     <script src="{{ url('backend/assets/libs/select2/js/select2.min.js') }}"></script>
+    <!-- form advanced -->
     <script src="{{ url('backend/assets/js/pages/form-advanced.init.js') }}"></script>
 </body>
 

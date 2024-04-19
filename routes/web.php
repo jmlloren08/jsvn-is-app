@@ -55,7 +55,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/warehouse/{id}', [WarehouseController::class, 'clearStock']);
     Route::put('/admin/transactions/{id}', [TransactionController::class, 'update']);
     Route::put('/admin/transactions', [TransactionController::class, 'addDiscount']);
-    
     // route to fetch products/outlets/stocks/transactions
     Route::post('/admin/products/getProducts', [ProductController::class, 'getProducts'])->name('admin.products.getProducts');
     Route::post('/admin/outlets/getOutlets', [OutletController::class, 'getOutlets'])->name('admin.outlets.getOutlets');
