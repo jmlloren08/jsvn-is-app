@@ -60,15 +60,19 @@ class GenerateReportController extends Controller
             $product = $productsMap[$transaction->product_id];
 
             $productData = [
-                'id'                => $product->id,
-                'product_name'      => $product->product_name,
-                'quantity'          => $transaction->quantity,
-                'on_hand'           => $transaction->on_hand,
-                'sold'              => $transaction->sold,
-                'unit_price'        => $transaction->unit_price,
-                'discounted_price'  => $transaction->discounted_price
+                'id' => $product->id,
+                'product_description' => $product->product_description,
+                'quantity' => $transaction->quantity,
+                'on_hand' => $transaction->on_hand,
+                'sold' => $transaction->sold,
+                'unit_price' => $transaction->unit_price,
+                'discounted_price' => $transaction->discounted_price
             ];
             $products[] = $productData;
+
+            usort($products, function ($a, $b) {
+                return $a['id'] - $b['id'];
+            });
         }
         return $products;
     }

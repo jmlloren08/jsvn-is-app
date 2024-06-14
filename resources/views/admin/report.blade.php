@@ -97,4 +97,5 @@
     let getTRANoURL = "/getTRANo";
 </script>
 <script src="{{ url('backend/assets/js/generate-report.js') }}"></script>
+<script src="{{ url('backend/assets/js/print-report.js') }}"></script>
 @endsection

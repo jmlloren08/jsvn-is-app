@@ -46,18 +46,18 @@ $(function () {
         let headerRow4 = $('<tr>');
 
         headerRow1.append('<th></th>');
-        headerRow2.append('<th>Date</th>');
+        headerRow2.append('<th>DATE</th>');
         headerRow3.append('<th>TRA #</th>');
-        headerRow4.append('<th>Product Name</th>')
+        headerRow4.append('<th>PRODUCT_NAME</th>')
 
         traNumbers.forEach((tra, index) => {
-            headerRow1.append(`<th>Resibo ${index + 1}</th>`);
+            headerRow1.append(`<th>RESIBO ${index + 1}</th>`);
             headerRow2.append(`<th>${data[tra].transaction_date}</th>`);
             headerRow3.append(`<th>${tra}</th>`);
             headerRow4.append(`<th></th>`)
         });
 
-        headerRow1.append('<th>Total_Qty</th><th>On_Hand</th><th>Sold</th><th>Unit_Price</th><th>Amount</th>');
+        headerRow1.append('<th>TOTAL_QTY</th><th>ON_HAND</th><th>SOLD</th><th>UNIT_PRICE</th><th>AMOUNT</th>');
         headerRow2.append('<th></th><th></th><th></th><th></th><th></th>');
         headerRow3.append('<th></th><th></th><th></th><th></th><th></th>');
         headerRow4.append('<th></th><th></th><th></th><th></th><th></th>')
@@ -73,7 +73,7 @@ $(function () {
             data[tra].products.forEach(product => {
                 if (!productMap.has(product.id)) {
                     productMap.set(product.id, {
-                        product_name: product.product_name,
+                        product_description: product.product_description,
                         on_hand: product.on_hand,
                         sold: product.sold,
                         unit_price: product.unit_price,
@@ -91,9 +91,11 @@ $(function () {
             });
         });
 
-        productMap.forEach((productData, productId) => {
+        let totalAmount = 0;
+
+        productMap.forEach(productData => {
             let productRow = $('<tr>');
-            productRow.append(`<td>${productData.product_name}</td>`);
+            productRow.append(`<td>${productData.product_description}</td>`);
 
             let totalQty = 0;
 
@@ -102,24 +104,27 @@ $(function () {
                 totalQty += qty;
             });
 
-            // let product = data[traNumbers[0]].products.find(p => p.product_name === productName);
-
             let onHand = productData.on_hand || 0;
-            let sold = productData.sold || 0;
+            let sold = totalQty - onHand;
             let unitPrice = productData.unit_price || 0;
-            let amount = productData.discounted_price || 0;
+            let amount = sold * unitPrice;
 
-            // let onHand = product ? product.on_hand : 0;
-            // let sold = product ? product.sold : 0;
-            // let unitPrice = product ? product.unit_price : 0;
-            // let amount = product ? product.discounted_price : 0;
+            totalAmount += amount;
 
-            productRow.append(`<td>${totalQty}</td><td>${onHand}</td><td>${sold}</td><td>${unitPrice}</td><td>${amount}</td>`);
+            productRow.append(`<td>${totalQty}</td><td>${onHand}</td><td>${sold}</td><td>${unitPrice}</td><td>${amount.toFixed(2)}</td>`);
 
             tableBody.append(productRow);
 
-            console.log(productMap);
         });
+
+        let totalRow = $('<tr>');
+        totalRow.append('<td></td><td></td><td></td><td></td>');
+        traNumbers.forEach(() => {
+            totalRow.append('<td></td>');
+        });
+        totalRow.append('<td><strong>TOTAL</strong></td>');
+        totalRow.append(`<td><strong>${totalAmount.toFixed(2)}</strong></td>`);
+        tableBody.append(totalRow);
     }
     // get TRA_NUMBER by outlet
     $('#filter_outlet_id').on('change', function () {
