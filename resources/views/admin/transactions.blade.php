@@ -334,7 +334,12 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4">
-                                <input type="number" class="form-control" id="discount" name="discount" placeholder="Enter discount here... e.g. (10)%">
+                                <select class="form-control custom-select" name="discount" id="discount" required>
+                                    <option value="" selected disabled>Select discount here</option>
+                                    <option value="10">10%</option>
+                                    <option value="12">12%</option>
+                                    <option value="15">15%</option>
+                                </select>
                                 <input type="hidden" class="form-control" id="discount_amount" name="discount_amount">
                             </div>
                             <div class="col-md-4"></div>
@@ -356,13 +361,6 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="dropdown float-end">
-                            <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="mdi mdi-dots-vertical"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a href="javascript:void(0);" class="dropdown-item" id="printReport">Print Report</a>
-                                <a href="javascript:void(0);" class="dropdown-item" id="exportReport">Export Report</a>
-                            </div>
                         </div>
                         <h4 class="card-title mb-4">Latest Transactions</h4>
                         <div class="table-responsive">
@@ -425,6 +423,5 @@
     let getUnitPriceAndDescriptionURL = "/get-unit-price-and-description";
 </script>
 <script src="{{ url('backend/assets/js/transactions.js') }}"></script>
-<script src="{{ url('backend/assets/js/print-transaction.js') }}"></script>
 
 @endsection

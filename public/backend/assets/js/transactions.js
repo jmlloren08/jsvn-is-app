@@ -1,4 +1,5 @@
 $(function () {
+    'use strict';
     let table = $("#dataTableSubmitted").DataTable({
         processing: true,
         serverSide: true,
@@ -364,7 +365,6 @@ $(function () {
     // add discount
     $('#btnAddDiscount').on('click', function () {
         let onhandAlreadyAdded = true;
-        let discountAlreadyAdded = false;
         // iterate over each row in the data table
         $('#dataTableSubmitted tbody tr').each(function () {
             let on_hand = $(this).find('td:eq(4)').text();
@@ -376,7 +376,6 @@ $(function () {
             }
             // if discount has a value, set false
             if (discount.trim() !== '' && parseFloat(discount.replace('₱', '').replace(',', ''))) {
-                discountAlreadyAdded = true;
                 return false;
             }
         });
@@ -404,15 +403,6 @@ $(function () {
                 icon: 'error',
                 title: 'Onhand required',
                 text: 'Please update all on-hand products with the selected outlet name to proceed.'
-            });
-            return;
-        }
-        // check if all discount values are filled.
-        if (discountAlreadyAdded) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Discount already added',
-                text: 'Please add discount to empty discount column only.'
             });
             return;
         }

@@ -57,8 +57,6 @@
     <script src="{{ url('backend/assets/libs/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ url('backend/assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ url('backend/assets/libs/node-waves/waves.min.js') }}"></script>
-    <!-- apexcharts -->
-    <!-- <script src="{{ url('backend/assets/libs/apexcharts/apexcharts.min.js') }}"></script> -->
     <!-- jquery.vectormap map -->
     <script src="{{ url('backend/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
     <script src="{{ url('backend/assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-us-merc-en.js') }}"></script>

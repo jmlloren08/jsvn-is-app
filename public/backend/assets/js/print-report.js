@@ -38,7 +38,7 @@ function printReport() {
     printWindow.document.write('<th>ON_HAND</th>');
     printWindow.document.write('<th>SOLD</th>');
     printWindow.document.write('<th>UNIT_PRICE</th>');
-    printWindow.document.write('<th>SUB_TOTAL</th>');
+    printWindow.document.write('<th>AMOUNT</th>');
     printWindow.document.write('<th>DISCOUNTED_PRICE</th>');
     printWindow.document.write('</tr></thead><tbody>');
 

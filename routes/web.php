@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\GenerateReportController;
 use App\Http\Controllers\OutletController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
@@ -34,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/outlets', [OutletController::class, 'index'])->name('admin.outlets');
     Route::get('/admin/products', [ProductController::class, 'index'])->name('admin.products');
     Route::get('/admin/users', [AdminController::class, 'Users'])->name('admin.users');
+    Route::get('/admin/report', [GenerateReportController::class, 'index'])->name('admin.report');
     // get product/outlet/stocks/unit_price/transactions
     Route::get('/admin/products/{id}', [ProductController::class, 'edit']);
     Route::get('/admin/outlets/{id}', [OutletController::class, 'edit']);
@@ -42,6 +44,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-outlet-name/{id}', [OutletController::class, 'getOutletName']);
     Route::get('/get-unit-price-and-description/{id}', [ProductController::class, 'getUnitPriceAndDescription']);
     Route::get('/get-transaction-number', [TransactionController::class, 'getTransactionNumber']);
+    Route::get('/getTransactions', [TransactionController::class, 'getTransactions']);
+    Route::get('/getTRANo', [GenerateReportController::class, 'getTraNo']);
+    Route::get('/generate-report', [GenerateReportController::class, 'generateReport'])->name('generateReport');
     // route for add new product/outlets/stocks/transactions
     Route::post('/admin/products', [ProductController::class, 'store'])->name('admin.products.store');
     Route::post('/admin/outlets', [OutletController::class, 'store'])->name('admin.outlets.store');

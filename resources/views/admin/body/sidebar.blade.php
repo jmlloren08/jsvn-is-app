@@ -25,12 +25,12 @@
                         <span>Warehouse</span>
                     </a>
                 </li>
-                <!-- <li>
-                    <a href="{{ route('admin.withdrawal') }}" class=" waves-effect">
-                        <i class="ri-home-gear-line"></i>
-                        <span>Withdrawal</span>
+                <li>
+                    <a href="{{ route('admin.report') }}" class=" waves-effect">
+                        <i class="ri-file-2-fill"></i>
+                        <span>Report</span>
                     </a>
-                </li> -->
+                </li>
             </ul>
             <!-- End of navigation -->
             <!-- Management -->
