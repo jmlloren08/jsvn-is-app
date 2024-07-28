@@ -36,6 +36,7 @@ $(function () {
     function populateReportTable(data, traNumbers) {
         let tableHead = $('#dataTableGenerateReport thead')
         let tableBody = $('#dynamicRows');
+        let outletNameVal = $('#filter_outlet_id option:selected').text();
 
         tableHead.empty();
         tableBody.empty();
@@ -45,7 +46,7 @@ $(function () {
         let headerRow3 = $('<tr>');
         let headerRow4 = $('<tr>');
 
-        headerRow1.append('<th></th>');
+        headerRow1.append(`<th>${outletNameVal}</th>`);
         headerRow2.append('<th>DATE</th>');
         headerRow3.append('<th>TRA #</th>');
         headerRow4.append('<th>PRODUCT_NAME</th>')

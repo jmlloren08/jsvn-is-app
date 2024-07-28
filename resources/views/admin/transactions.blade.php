@@ -422,6 +422,6 @@
     let addDiscountURL = "/admin/transactions";
     let getUnitPriceAndDescriptionURL = "/get-unit-price-and-description";
 </script>
-<script src="{{ url('backend/assets/js/transactions.js') }}"></script>
+<script src="{{ url('backend/assets/js/transactions.min.js') }}"></script>
 
 @endsection

@@ -111,5 +111,5 @@
     let updateOutletURL = editOutletURL;
     let deleteOutletURL = editOutletURL;
 </script>
-<script src="{{ url('backend/assets/js/outlet.js') }}"></script>
+<script src="{{ url('backend/assets/js/outlet.min.js') }}"></script>
 @endsection

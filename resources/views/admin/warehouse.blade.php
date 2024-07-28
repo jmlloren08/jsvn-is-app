@@ -409,6 +409,6 @@
     let clearStockURL = editStockURL;
     let addNewStockURL = "/admin/warehouse";
 </script>
-<script src="{{ url('backend/assets/js/warehouse.js') }}"></script>
-<script src="{{ url('backend/assets/js/print-warehouse.js') }}"></script>
+<script src="{{ url('backend/assets/js/warehouse.min.js') }}"></script>
+<script src="{{ url('backend/assets/js/print-warehouse.min.js') }}"></script>
 @endsection
