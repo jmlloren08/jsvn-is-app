@@ -80,6 +80,7 @@ $(function () {
                         unit_price: product.unit_price,
                         discounted_price: product.discounted_price,
                         quantities: new Array(traNumbers.length).fill(0)
+
                     });
                 }
             });
@@ -93,6 +94,7 @@ $(function () {
         });
 
         let totalAmount = 0;
+        let totalDiscountedPrice = 0;
 
         productMap.forEach(productData => {
             let productRow = $('<tr>');
@@ -109,13 +111,14 @@ $(function () {
             let sold = totalQty - onHand;
             let unitPrice = productData.unit_price || 0;
             let amount = sold * unitPrice;
+            let discountedPrice = parseFloat(productData.discounted_price) || 0;
 
             totalAmount += amount;
+            totalDiscountedPrice += discountedPrice;
 
             productRow.append(`<td>${totalQty}</td><td>${onHand}</td><td>${sold}</td><td>${unitPrice}</td><td>${amount.toFixed(2)}</td>`);
 
             tableBody.append(productRow);
-
         });
 
         let totalRow = $('<tr>');
@@ -125,7 +128,18 @@ $(function () {
         });
         totalRow.append('<td><strong>TOTAL</strong></td>');
         totalRow.append(`<td><strong>${totalAmount.toFixed(2)}</strong></td>`);
+
         tableBody.append(totalRow);
+
+        let discountedPriceRow = $('<tr>');
+        discountedPriceRow.append('<td></td><td></td><td></td><td></td>');
+        traNumbers.forEach(()=>{
+            discountedPriceRow.append('<td></td>');
+        });
+        discountedPriceRow.append('<td><strong>DISCOUNTED PRICE</strong></td>');
+        discountedPriceRow.append(`<td><strong>${totalDiscountedPrice.toFixed(2)}</strong></td>`);
+
+        tableBody.append(discountedPriceRow);
     }
     // get TRA_NUMBER by outlet
     $('#filter_outlet_id').on('change', function () {

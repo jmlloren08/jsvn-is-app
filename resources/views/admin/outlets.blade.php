@@ -84,6 +84,15 @@
             <div class="col-xl-8">
                 <div class="card">
                     <div class="card-body">
+                        <div class="dropdown float-end">
+                            <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="mdi mdi-dots-vertical"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a href="javascript:void(0);" class="dropdown-item" id="printOutlet">Print List</a>
+                                <a href="javascript:void(0);" class="dropdown-item" id="exportOutlet">Export Report</a>
+                            </div>
+                        </div>
                         <h4 class="card-title mb-4">All outlets</h4>
                         <div class="table-responsive">
                             <table id="dataTable" class="table table-centered mb-0 align-middle table-hover table-nowrap">
@@ -112,4 +121,5 @@
     let deleteOutletURL = editOutletURL;
 </script>
 <script src="{{ url('backend/assets/js/outlet.min.js') }}"></script>
+<script src="{{ url('backend/assets/js/print-outlet.min.js') }}"></script>
 @endsection

@@ -14,37 +14,55 @@ class OutletController extends Controller
     }
     public function getOutlets(Request $request)
     {
-        $draw           = $request->input('draw');
-        $start          = $request->input('start');
-        $length         = $request->input('length');
-        $searchValue    = $request->input('search.value');
-        $orderColumn    = $request->input("columns.{$request->input('order.0.column')}.data");
-        $orderDirection = $request->input('order.0.dir');
-        $query          = Outlet::query();
+        try {
+            $draw           = $request->input('draw');
+            $start          = $request->input('start');
+            $length         = $request->input('length');
+            $searchValue    = $request->input('search.value');
+            $orderColumn    = $request->input("columns.{$request->input('order.0.column')}.data");
+            $orderDirection = $request->input('order.0.dir');
 
-        if (!empty($searchValue)) {
-            $query->whereAny([
-                'outlet_name',
-                'outlet_cities_municipalities',
-                'outlet_provinces'
-            ], 'like', "%$searchValue%")->get();
+            $query = Outlet::query();
+
+            if (!empty($searchValue)) {
+                $query->whereAny([
+                    'outlet_name',
+                    'outlet_cities_municipalities',
+                    'outlet_provinces'
+                ], 'like', "%$searchValue%")->get();
+            }
+
+            // order the results
+            $query->orderBy($orderColumn, $orderDirection);
+            // get the total records before pagination and filtering
+            $totalRecords = $query->count();
+
+            if ($length != -1) {
+                // get the total records after filtering
+                $filteredRecords = $query->count();
+                // pagination
+                $outlets = $query->skip($start)
+                    ->take($length)
+                    ->get();
+            } else {
+                $filteredRecords = $totalRecords;
+                $outlets = $query->get();
+            }
+
+            // prepare the response
+            $response = [
+                'draw'              => intval($draw),
+                'recordsTotal'      => $totalRecords,
+                'recordsFiltered'   => $filteredRecords,
+                'data'              => $outlets
+            ];
+            // send the response
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+
+            Log::error("Error fetching data for printing: " . $e->getMessage());
+            return response()->json(['message' => 'Internal server error'], 500);
         }
-
-        $totalRecords = $query->count();
-        $query->orderBy($orderColumn, $orderDirection);
-        $filteredRecords = $query->count();
-        $outlets = $query->skip($start)
-            ->take($length)
-            ->get(['*']);
-
-        $response = [
-            'draw'              => intval($draw),
-            'recordsTotal'      => $totalRecords,
-            'recordsFiltered'   => $filteredRecords,
-            'data'              => $outlets
-        ];
-
-        return response()->json($response, 200);
     }
     public function store(Request $request)
     {

@@ -40,7 +40,10 @@ $(function () {
         ],
         info: true,
         autoWidth: true,
-        lengthMenu: [30, 40, 50, 60, 100],
+        lengthMenu: [
+            [10, 20, 30, 40, 50, -1],
+            [10, 20, 30, 40, 50, 'All']
+        ],
         scrollX: true
     }); // end of table
     // add new Outlet

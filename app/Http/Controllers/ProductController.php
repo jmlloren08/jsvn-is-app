@@ -35,7 +35,7 @@ class ProductController extends Controller
         $filteredRecords = $query->count();
         $products = $query->skip($start)
             ->take($length)
-            ->get(['*']);
+            ->get();
 
         $response = [
             'draw'              => intval($draw),
